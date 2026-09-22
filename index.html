@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sơ Đồ Thủy Lực Đa Pattern 24h (5 Nút) - HueWACO</title>
+    <style>
+        :root {
+            --excel-green: #005a36;
+            --excel-green-light: #e6f0eb;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --border-color: #cbd5e1;
+            --text-dark: #0f172a;
+            --text-red: #b91c1c;
+            --accent-blue: #0284c7;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; height: 100%; background: var(--bg-color); color: var(--text-dark); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+        body { padding: 8px; }
+
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; background: var(--card-bg); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid var(--border-color); }
+        .header-bar { background: var(--excel-green); color: #fff; text-align: center; padding: 10px; font-size: 1.05rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .content { padding: 10px 12px; }
+
+        .section-title { font-weight: 700; color: #005a36; background: var(--excel-green-light); border-left: 4px solid var(--excel-green); padding: 6px 10px; margin: 8px 0; font-size: 0.85rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+
+        /* BẢNG ĐIỀU KHIỂN MÔ PHỎNG */
+        .simulation-bar { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+        .sim-time-display { font-size: 1rem; font-weight: bold; color: #0284c7; min-width: 100px; }
+        .sim-slider-container { flex: 1; min-width: 180px; display: flex; align-items: center; gap: 8px; }
+        .sim-slider { width: 100%; height: 6px; border-radius: 4px; outline: none; background: #cbd5e1; cursor: pointer; accent-color: #0284c7; }
+        
+        .btn-sim { background: #0284c7; color: #fff; border: none; padding: 5px 12px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .btn-sim:hover { background: #0369a1; }
+        .btn-sim-alt { background: #005a36; }
+        .btn-sim-alt:hover { background: #004428; }
+
+        /* CẤU HÌNH PATTERN */
+        .pattern-panel { display: none; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; margin-bottom: 10px; }
+        .pattern-category-bar { display: flex; gap: 10px; margin-bottom: 8px; background: #f8fafc; padding: 6px 10px; border-radius: 4px; border: 1px solid #e2e8f0; align-items: center; }
+        .pattern-category-title { font-size: 0.78rem; font-weight: bold; color: #005a36; }
+        .pattern-cat-select { font-size: 0.75rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; border: 1px solid #cbd5e1; outline: none; background: #fff; color: #0284c7; }
+
+        .pattern-tabs { display: flex; gap: 6px; margin-bottom: 8px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; flex-wrap: wrap; min-height: 32px; align-items: center; }
+        .tab-btn { padding: 4px 10px; font-size: 0.75rem; font-weight: bold; border: 1px solid #cbd5e1; background: #f1f5f9; color: #475569; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .tab-btn.active { background: #0284c7 !important; color: #fff !important; border-color: #0284c7 !important; }
+        .tab-del-btn { color: #dc2626; font-weight: bold; margin-left: 4px; border-radius: 50%; padding: 0 4px; font-size: 0.7rem; }
+        .tab-del-btn:hover { background: #fef2f2; }
+
+        .pattern-layout { display: flex; gap: 12px; height: 250px; }
+        .pattern-table-wrapper { width: 200px; border: 1px solid #cbd5e1; border-radius: 4px; overflow-y: auto; background: #fafafa; }
+        .pattern-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: center; }
+        .pattern-table th { position: sticky; top: 0; background: #e2e8f0; color: #334155; font-weight: bold; padding: 5px 2px; }
+        .pattern-table td { padding: 3px 2px; border-bottom: 1px solid #f1f5f9; }
+        
+        .pattern-table input { width: 60px; text-align: center; border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px; font-size: 0.75rem; font-weight: bold; outline: none; }
+        .pat-val-zero { color: #94a3b8 !important; background-color: #f8fafc !important; }
+        .pat-val-active { color: #0284c7 !important; background-color: #ffffff !important; }
+
+        .pattern-chart-wrapper { flex: 1; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px; background: #ffffff; display: flex; flex-direction: column; }
+        .pattern-chart-title { font-size: 0.8rem; font-weight: bold; color: #005a36; text-align: center; margin-bottom: 4px; }
+        .pattern-chart-canvas { width: 100%; flex: 1; }
+
+        .result-simple-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+        .result-card { background: #f0f9ff; border: 1px solid #bae6fd; padding: 6px; border-radius: 6px; }
+        .result-card-title { font-size: 0.75rem; color: #0369a1; font-weight: 700; text-transform: uppercase; }
+        .result-card-value { font-size: 1.1rem; font-weight: bold; color: #0284c7; }
+
+        .warning-box { margin-top: 6px; padding: 6px 10px; border-radius: 4px; font-size: 0.78rem; line-height: 1.3; display: none; }
+        .warn-red { background: #fef2f2; border-left: 4px solid #dc2626; color: #991b1b; }
+        .warn-green { background: #f0fdf4; border-left: 4px solid #16a34a; color: #166534; }
+
+        .diagram-wrapper { position: relative; width: 100%; background: #ffffff; border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; margin-top: 6px; }
+        canvas { width: 100%; height: 380px; background: #ffffff; display: block; }
+
+        /* BỐ CỤC NHẬP LIỆU TÁCH THÀNH 2 DÃY (4 ĐOẠN - 5 NÚT) */
+        .inputs-container { margin-top: 10px; display: flex; flex-direction: column; gap: 12px; }
+        
+        .pipe-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .node-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+
+        .input-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px; }
+        .pipe-card { border-top: 3px solid #005a36; }
+        .node-card { border-top: 3px solid #0284c7; }
+        .node-card-end { border-top: 3px solid #15803d; background: #f0fdf4; border-color: #bbf7d0; }
+
+        .card-header { font-size: 0.75rem; font-weight: bold; color: #005a36; margin-bottom: 6px; text-align: center; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; }
+        .node-card .card-header { color: #0284c7; }
+        .node-card-end .card-header { color: #15803d; border-bottom-color: #bbf7d0; }
+
+        .input-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; font-size: 0.68rem; }
+        .input-row label { color: #334155; font-weight: 600; white-space: nowrap; flex: 1; }
+        
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
+
+        .input-card input { width: 62px; padding: 2px 3px; border: 1px solid #cbd5e1; border-radius: 3px; font-size: 0.68rem; text-align: center; outline: none; background: #fff; height: 22px; }
+        .input-card select { width: 110px; padding: 1px 2px; border: 1px solid #cbd5e1; border-radius: 3px; font-size: 0.67rem; text-align: left; outline: none; background: #fff; height: 22px; }
+
+        .sub-info { font-size: 0.66rem; color: #166534; font-weight: 600; text-align: right; margin-top: 2px; }
+
+        .footer { padding: 8px 12px; font-size: 0.72rem; color: #64748b; background: #fff; border-top: 1px solid var(--border-color); margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        @media screen and (max-width: 1024px) {
+            .pipe-row { grid-template-columns: repeat(2, 1fr); }
+            .node-row { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media screen and (max-width: 600px) {
+            .pipe-row { grid-template-columns: 1fr; }
+            .node-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-bar">TÍNH TOÁN THỦY LỰC & MÔ PHỎNG ĐA PATTERN 24H (MÔ HÌNH 5 NÚT) - HUEWACO</div>
+    
+    <div class="content">
+        <!-- ĐIỀU KHIỂN THỜI GIAN -->
+        <div class="simulation-bar">
+            <div class="sim-time-display" id="simTimeText">⏰ Giờ: 08:00</div>
+            <div class="sim-slider-container">
+                <span style="font-size:0.72rem; font-weight:bold; color:#475569;">00h</span>
+                <input type="range" min="0" max="23" value="8" class="sim-slider" id="timeSlider" oninput="onSliderChange(this.value)">
+                <span style="font-size:0.72rem; font-weight:bold; color:#475569;">23h</span>
+            </div>
+            <button class="btn-sim" id="btnPlay" onclick="togglePlay()"><span id="playIcon">▶</span> Mô Phỏng 24h</button>
+            <button class="btn-sim btn-sim-alt" onclick="togglePatternPanel()">⚙️ Pattern</button>
+        </div>
+
+        <!-- CẤU HÌNH PATTERN -->
+        <div class="pattern-panel" id="patternPanel">
+            <div class="pattern-category-bar">
+                <span class="pattern-category-title">Loại Pattern:</span>
+                <select class="pattern-cat-select" id="patCategoryFilter" onchange="filterPatternCategory(this.value)">
+                    <option value="demand" selected>Nhu cầu dùng nước</option>
+                    <option value="pressure">Áp lực mạng</option>
+                </select>
+                <button onclick="createNewPattern()" style="font-size:0.72rem; padding:4px 10px; background:#0284c7; color:#fff; border:none; border-radius:3px; cursor:pointer; font-weight:bold;">➕ Thêm Pattern mới</button>
+                <button onclick="resetDefaultPatterns()" style="font-size:0.72rem; padding:4px 8px; background:#e2e8f0; border:1px solid #cbd5e1; border-radius:3px; cursor:pointer; margin-left:auto;">Khôi phục mặc định</button>
+            </div>
+
+            <div class="pattern-tabs" id="patternTabsContainer"></div>
+            
+            <div style="margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.75rem; font-weight:bold; color:#334155;">Tên gọi:</span>
+                <input type="text" id="pattern_name_input" style="padding:3px 6px; font-size:0.78rem; font-weight:bold; border:1px solid #cbd5e1; border-radius:4px; width:260px;" oninput="updatePatternName(this.value)">
+                <span style="font-size:0.72rem; color:#64748b; font-style:italic;" id="pattern_count_info">Cấu hình: 0/10 Pattern</span>
+            </div>
+
+            <div class="pattern-layout">
+                <div class="pattern-table-wrapper">
+                    <table class="pattern-table">
+                        <thead>
+                            <tr>
+                                <th>Giờ</th>
+                                <th>Hệ số (C<sub>t</sub>)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patternTbody"></tbody>
+                    </table>
+                </div>
+                <div class="pattern-chart-wrapper">
+                    <div class="pattern-chart-title">So sánh Đồ thị Biến thiên các Pattern</div>
+                    <canvas id="patternCanvas" class="pattern-chart-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- KẾT QUẢ TỔNG THỂ -->
+        <div class="section-title">
+            <span>I. Kết quả Thủy lực lúc <span id="lblCurrentHour" style="color:#0284c7;">08:00</span></span>
+            <span style="font-weight: normal; font-size: 0.75rem; color: #334155; text-transform: none;">
+                Mô phỏng thủy lực biến thiên áp lực & nhu cầu dùng nước 24h
+            </span>
+        </div>
+
+        <div class="result-simple-grid">
+            <div class="result-card">
+                <div class="result-card-title">Chiều dài tuyến</div>
+                <div class="result-card-value" id="res_total_length">- km</div>
+            </div>
+            <div class="result-card">
+                <div class="result-card-title">Lưu lượng truyền tải Q<sub>12</sub></div>
+                <div class="result-card-value" id="res_total_q">- m³/h</div>
+            </div>
+            <div class="result-card">
+                <div class="result-card-title">Tổng tổn thất H<sub>f</sub></div>
+                <div class="result-card-value" id="res_hf_total" style="color: #b91c1c;">- m</div>
+            </div>
+        </div>
+
+        <div id="warn_box" class="warning-box"></div>
+
+        <!-- SƠ ĐỒ TRẮC DỌC & BỐ CỤC NHẬP LIỆU TÁCH 2 DÃY (4 ĐOẠN - 5 NÚT) -->
+        <div class="section-title">II. Sơ đồ Trắc dọc & Nhập dữ liệu phân đoạn (Mô hình 5 nút)</div>
+        
+        <div class="diagram-wrapper">
+            <canvas id="profileCanvas"></canvas>
+
+            <div class="inputs-container">
+                <!-- DÃY 1: CÁC ĐOẠN TUYẾN ỐNG (4 ĐOẠN) -->
+                <div class="pipe-row">
+                    <div class="input-card pipe-card">
+                        <div class="card-header">ĐOẠN 1 - 2</div>
+                        <div class="input-row"><label>Chiều dài L (m):</label><input type="number" id="l12" value="8000" onchange="calculateProfile()"></div>
+                        <div class="input-row">
+                            <label>Vật liệu:</label>
+                            <select id="mat12" onchange="updatePipeList(1)">
+                                <option value="ductile" selected>Gang Dẻo (ISO 2531)</option>
+                                <option value="hdpe">HDPE</option>
+                                <option value="inox">Inox</option>
+                            </select>
+                        </div>
+                        <div class="input-row">
+                            <label>Áp lực PN:</label>
+                            <select id="pn12" onchange="updatePipeList(1)">
+                                <option value="PN10" selected>PN10 (Class C40/K9)</option>
+                                <option value="PN16">PN16 (Class C40/K9)</option>
+                                <option value="PN25">PN25 (Class C50/K10)</option>
+                            </select>
+                        </div>
+                        <div class="input-row"><label>Cỡ ống (DN):</label><select id="dn12" onchange="calculateProfile()"></select></div>
+                        <div class="sub-info" id="sub12">D<sub>in</sub>: - mm</div>
+                    </div>
+
+                    <div class="input-card pipe-card">
+                        <div class="card-header">ĐOẠN 2 - 3</div>
+                        <div class="input-row"><label>Chiều dài L (m):</label><input type="number" id="l23" value="5000" onchange="calculateProfile()"></div>
+                        <div class="input-row">
+                            <label>Vật liệu:</label>
+                            <select id="mat23" onchange="updatePipeList(2)">
+                                <option value="ductile" selected>Gang Dẻo (ISO 2531)</option>
+                                <option value="hdpe">HDPE</option>
+                                <option value="inox">Inox</option>
+                            </select>
+                        </div>
+                        <div class="input-row">
+                            <label>Áp lực PN:</label>
+                            <select id="pn23" onchange="updatePipeList(2)">
+                                <option value="PN10" selected>PN10 (Class C40/K9)</option>
+                                <option value="PN16">PN16 (Class C40/K9)</option>
+                                <option value="PN25">PN25 (Class C50/K10)</option>
+                            </select>
+                        </div>
+                        <div class="input-row"><label>Cỡ ống (DN):</label><select id="dn23" onchange="calculateProfile()"></select></div>
+                        <div class="sub-info" id="sub23">D<sub>in</sub>: - mm</div>
+                    </div>
+
+                    <div class="input-card pipe-card">
+                        <div class="card-header">ĐOẠN 3 - 4</div>
+                        <div class="input-row"><label>Chiều dài L (m):</label><input type="number" id="l34" value="6000" onchange="calculateProfile()"></div>
+                        <div class="input-row">
+                            <label>Vật liệu:</label>
+                            <select id="mat34" onchange="updatePipeList(3)">
+                                <option value="ductile" selected>Gang Dẻo (ISO 2531)</option>
+                                <option value="hdpe">HDPE</option>
+                                <option value="inox">Inox</option>
+                            </select>
+                        </div>
+                        <div class="input-row">
+                            <label>Áp lực PN:</label>
+                            <select id="pn34" onchange="updatePipeList(3)">
+                                <option value="PN10" selected>PN10 (Class C40/K9)</option>
+                                <option value="PN16">PN16 (Class C40/K9)</option>
+                                <option value="PN25">PN25 (Class C50/K10)</option>
+                            </select>
+                        </div>
+                        <div class="input-row"><label>Cỡ ống (DN):</label><select id="dn34" onchange="calculateProfile()"></select></div>
+                        <div class="sub-info" id="sub34">D<sub>in</sub>: - mm</div>
+                    </div>
+
+                    <div class="input-card pipe-card">
+                        <div class="card-header">ĐOẠN 4 - 5</div>
+                        <div class="input-row"><label>Chiều dài L (m):</label><input type="number" id="l45" value="6000" onchange="calculateProfile()"></div>
+                        <div class="input-row">
+                            <label>Vật liệu:</label>
+                            <select id="mat45" onchange="updatePipeList(4)">
+                                <option value="ductile" selected>Gang Dẻo (ISO 2531)</option>
+                                <option value="hdpe">HDPE</option>
+                                <option value="inox">Inox</option>
+                            </select>
+                        </div>
+                        <div class="input-row">
+                            <label>Áp lực PN:</label>
+                            <select id="pn45" onchange="updatePipeList(4)">
+                                <option value="PN10" selected>PN10 (Class C40/K9)</option>
+                                <option value="PN16">PN16 (Class C40/K9)</option>
+                                <option value="PN25">PN25 (Class C50/K10)</option>
+                            </select>
+                        </div>
+                        <div class="input-row"><label>Cỡ ống (DN):</label><select id="dn45" onchange="calculateProfile()"></select></div>
+                        <div class="sub-info" id="sub45">D<sub>in</sub>: - mm</div>
+                    </div>
+                </div>
+
+                <!-- DÃY 2: CÁC NÚT MẠNG LƯỚI (NÚT 1 -> NÚT 5) -->
+                <div class="node-row">
+                    <!-- NÚT 1 -->
+                    <div class="input-card node-card">
+                        <div class="card-header">DỮ LIỆU NÚT 1 (NGUỒN)</div>
+                        <div class="input-row"><label>Z<sub>1</sub> điểm đầu (m):</label><input type="number" id="z1" value="5.0" onchange="calculateProfile()"></div>
+                        <div class="input-row">
+                            <label>Chế độ Nút 1:</label>
+                            <select id="p1_source_type" onchange="onP1SourceTypeChange()">
+                                <option value="network" selected>Áp lực mạng</option>
+                                <option value="pump_station">Trạm bơm tăng áp</option>
+                            </select>
+                        </div>
+                        <div class="input-row"><label>P<sub>mạng BQ</sub> (m):</label><input type="number" id="p1_mang_bq" value="25.0" onchange="calculateProfile()"></div>
+                        <div class="input-row">
+                            <label>Pattern Mạng:</label>
+                            <select id="pat_node1_mang" onchange="calculateProfile()"></select>
+                        </div>
+
+                        <div id="pump_group_container" style="display:none; border-top:1px dashed #cbd5e1; margin-top:4px; padding-top:4px;">
+                            <div class="input-row"><label>P<sub>bơm TK</sub> (m):</label><input type="number" id="p1_bom_tk" value="42.0" onchange="calculateProfile()"></div>
+                            <div class="input-row">
+                                <label>Pattern Bơm:</label>
+                                <select id="pat_node1_bom" onchange="calculateProfile()"></select>
+                            </div>
+                        </div>
+                        
+                        <div id="p1_status_lbl" style="font-size:0.65rem; font-weight:bold; text-align:center; margin-top:5px; padding:4px; border-radius:4px;">
+                            CẤP ÁP LỰC MẠNG: P1 = 25.0m
+                        </div>
+                    </div>
+
+                    <!-- NÚT 2 -->
+                    <div class="input-card node-card">
+                        <div class="card-header">DỮ LIỆU NÚT 2</div>
+                        <div class="input-row"><label>Z<sub>2</sub> (m):</label><input type="number" id="z2" value="18.0" onchange="calculateProfile()"></div>
+                        <div class="input-row"><label>Q<sub>n-2</sub> (m³/ngđ):</label><input type="number" id="q_out2" value="0" onchange="onQInputChange(2)"></div>
+                        <div class="input-row" id="row_pat_2" style="display:none;">
+                            <label>Pattern Q<sub>2</sub>:</label>
+                            <select id="pat_node2" onchange="onNodePatternChange(2)"></select>
+                        </div>
+                    </div>
+
+                    <!-- NÚT 3 -->
+                    <div class="input-card node-card">
+                        <div class="card-header">DỮ LIỆU NÚT 3</div>
+                        <div class="input-row"><label>Z<sub>3</sub> (m):</label><input type="number" id="z3" value="10.0" onchange="calculateProfile()"></div>
+                        <div class="input-row"><label>Q<sub>n-3</sub> (m³/ngđ):</label><input type="number" id="q_out3" value="0" onchange="onQInputChange(3)"></div>
+                        <div class="input-row" id="row_pat_3" style="display:none;">
+                            <label>Pattern Q<sub>3</sub>:</label>
+                            <select id="pat_node3" onchange="onNodePatternChange(3)"></select>
+                        </div>
+                    </div>
+
+                    <!-- NÚT 4 -->
+                    <div class="input-card node-card">
+                        <div class="card-header">DỮ LIỆU NÚT 4</div>
+                        <div class="input-row"><label>Z<sub>4</sub> (m):</label><input type="number" id="z4" value="5.0" onchange="calculateProfile()"></div>
+                        <div class="input-row"><label>Q<sub>n-4</sub> (m³/ngđ):</label><input type="number" id="q_out4" value="0" onchange="onQInputChange(4)"></div>
+                        <div class="input-row" id="row_pat_4" style="display:none;">
+                            <label>Pattern Q<sub>4</sub>:</label>
+                            <select id="pat_node4" onchange="onNodePatternChange(4)"></select>
+                        </div>
+                    </div>
+
+                    <!-- NÚT 5 (ĐIỂM CUỐI) -->
+                    <div class="input-card node-card-end">
+                        <div class="card-header">DỮ LIỆU NÚT 5 (ĐIỂM CUỐI)</div>
+                        <div class="input-row"><label>Z<sub>5</sub> điểm cuối (m):</label><input type="number" id="z5" value="3.0" onchange="calculateProfile()"></div>
+                        <div class="input-row"><label>Q<sub>n-5</sub> (m³/ngđ):</label><input type="number" id="q_out5" value="10000" onchange="onQInputChange(5)"></div>
+                        <div class="input-row" id="row_pat_5">
+                            <label>Pattern Q<sub>5</sub>:</label>
+                            <select id="pat_node5" onchange="onNodePatternChange(5)"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>Copyright © <b>PHÒNG KỸ THUẬT - HueWACO</b></div>
+        <div style="color:#166534; font-weight:bold;">🟢 Tự động tính toán Real-time (Mô hình 5 Nút)</div>
+    </div>
+</div>
+
+<script>
+    // PATTERN MẶC ĐỊNH
+    const DEFAULT_PATTERNS = [
+        {
+            id: "p_sinhhoat",
+            name: "Sinh hoạt",
+            type: "demand",
+            isDefault: true,
+            color: "#0284c7",
+            values: [0.40, 0.35, 0.30, 0.30, 0.45, 0.85, 1.40, 1.30, 1.15, 1.05, 1.10, 1.10, 1.00, 0.95, 0.90, 1.05, 1.35, 1.50, 1.40, 1.20, 0.95, 0.75, 0.60, 0.45]
+        },
+        {
+            id: "p_congnghiep",
+            name: "Công nghiệp",
+            type: "demand",
+            isDefault: true,
+            color: "#d83b01",
+            values: [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00]
+        },
+        {
+            id: "p_mang_tn",
+            name: "Áp lực Mạng tự nhiên",
+            type: "pressure",
+            isDefault: false,
+            color: "#15803d",
+            values: [1.10, 1.15, 1.20, 1.20, 1.10, 0.95, 0.80, 0.85, 0.90, 0.95, 0.95, 0.95, 1.00, 1.05, 1.05, 0.95, 0.80, 0.75, 0.80, 0.90, 1.00, 1.05, 1.10, 1.10]
+        },
+        {
+            id: "p_bom_5_20",
+            name: "Bơm (Chạy 5h - 20h)",
+            type: "pressure",
+            isDefault: false,
+            color: "#7c3aed",
+            values: [0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00]
+        }
+    ];
+
+    let patternsData = [];
+    let activePatternIdx = 0;
+    let currentCategoryFilter = "demand";
+    let currentHour = 8;
+    let isPlaying = false;
+    let timerId = null;
+    let pulseOpacity = 1;
+    let pulseDirection = -0.05;
+
+    function loadPatterns() {
+        let saved = localStorage.getItem('hw_hydraulic_patterns_v8_5nodes');
+        let savedCat = localStorage.getItem('hw_hydraulic_cat_filter');
+        if (savedCat) currentCategoryFilter = savedCat;
+
+        if (saved) {
+            try { patternsData = JSON.parse(saved); } 
+            catch(e) { patternsData = JSON.parse(JSON.stringify(DEFAULT_PATTERNS)); }
+        } else {
+            patternsData = JSON.parse(JSON.stringify(DEFAULT_PATTERNS));
+        }
+
+        document.getElementById('patCategoryFilter').value = currentCategoryFilter;
+    }
+
+    function savePatterns() {
+        localStorage.setItem('hw_hydraulic_patterns_v8_5nodes', JSON.stringify(patternsData));
+        localStorage.setItem('hw_hydraulic_cat_filter', currentCategoryFilter);
+    }
+
+    function resetDefaultPatterns() {
+        if (confirm("Khôi phục về bảng Pattern mặc định ban đầu? Các Pattern bạn tạo thêm sẽ bị xóa.")) {
+            patternsData = JSON.parse(JSON.stringify(DEFAULT_PATTERNS));
+            currentCategoryFilter = "demand";
+            document.getElementById('patCategoryFilter').value = currentCategoryFilter;
+            savePatterns();
+            renderPatternTabs();
+            initPatternTable();
+            updatePatternSelectBoxes();
+            drawPatternChart();
+            calculateProfile();
+        }
+    }
+
+    const DI_PIPE_SPECS = {
+        80:   { DE: 98,   e_gang: 6.0, t_mortar: 3.0 },
+        100:  { DE: 118,  e_gang: 6.0, t_mortar: 3.0 },
+        150:  { DE: 170,  e_gang: 6.0, t_mortar: 3.0 },
+        200:  { DE: 222,  e_gang: 6.3, t_mortar: 3.0 },
+        250:  { DE: 274,  e_gang: 6.8, t_mortar: 3.0 },
+        300:  { DE: 326,  e_gang: 7.2, t_mortar: 3.0 },
+        350:  { DE: 378,  e_gang: 7.7, t_mortar: 5.0 },
+        400:  { DE: 429,  e_gang: 8.1, t_mortar: 5.0 },
+        450:  { DE: 480,  e_gang: 8.6, t_mortar: 5.0 },
+        500:  { DE: 532,  e_gang: 9.0, t_mortar: 5.0 },
+        600:  { DE: 635,  e_gang: 9.9, t_mortar: 5.0 },
+        700:  { DE: 738,  e_gang: 10.8, t_mortar: 6.0 },
+        800:  { DE: 842,  e_gang: 11.7, t_mortar: 6.0 },
+        900:  { DE: 945,  e_gang: 12.6, t_mortar: 6.0 },
+        1000: { DE: 1048, e_gang: 13.5, t_mortar: 6.0 },
+        1200: { DE: 1255, e_gang: 15.3, t_mortar: 6.0 }
+    };
+
+    const RAW_SIZES = [50, 63, 75, 90, 110, 125, 140, 160, 180, 200, 225, 250, 280, 315, 355, 400, 450, 500, 560, 630, 710, 800, 900, 1000, 1200];
+
+    function getPipeDb(mat, pn) {
+        let list = [];
+        RAW_SIZES.forEach(dn => {
+            let din = dn;
+            if (mat === 'hdpe') {
+                let sdr = pn === 'PN10' ? 17 : pn === 'PN16' ? 11 : 9;
+                let wall = dn / sdr;
+                din = dn - 2 * wall;
+            } else if (mat === 'ductile') {
+                if (DI_PIPE_SPECS[dn]) {
+                    let spec = DI_PIPE_SPECS[dn];
+                    let factor = (pn === 'PN25') ? 1.12 : 1.0; 
+                    din = spec.DE - 2 * (spec.e_gang * factor + spec.t_mortar);
+                } else {
+                    return;
+                }
+            } else if (mat === 'inox') {
+                let wall = pn === 'PN10' ? 3.0 : pn === 'PN16' ? 4.5 : 6.0;
+                din = dn - 2 * wall;
+            }
+            if (din > 0) {
+                list.push({ dn: dn, din: parseFloat(din.toFixed(1)) });
+            }
+        });
+        return list;
+    }
+
+    const MATERIAL_C = { hdpe: 140, ductile: 130, inox: 140 };
+
+    function filterPatternCategory(cat) {
+        currentCategoryFilter = cat;
+        savePatterns();
+        
+        let validIndices = [];
+        patternsData.forEach((p, idx) => {
+            if (p.type === currentCategoryFilter) validIndices.push(idx);
+        });
+
+        if (validIndices.length > 0 && !validIndices.includes(activePatternIdx)) {
+            activePatternIdx = validIndices[0];
+        }
+
+        renderPatternTabs();
+        initPatternTable();
+        drawPatternChart();
+    }
+
+    function renderPatternTabs() {
+        const container = document.getElementById('patternTabsContainer');
+        container.innerHTML = '';
+
+        let countInCurrentCat = 0;
+
+        patternsData.forEach((pat, idx) => {
+            if (pat.type !== currentCategoryFilter) return;
+            countInCurrentCat++;
+
+            const btn = document.createElement('button');
+            btn.className = idx === activePatternIdx ? 'tab-btn active' : 'tab-btn';
+            btn.style.borderLeft = `4px solid ${pat.color}`;
+            btn.innerHTML = `<span>${pat.name}</span>`;
+
+            if (!pat.isDefault) {
+                const delBtn = document.createElement('span');
+                delBtn.className = 'tab-del-btn';
+                delBtn.innerText = '✕';
+                delBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deletePattern(idx);
+                };
+                btn.appendChild(delBtn);
+            }
+
+            btn.onclick = () => switchPatternTab(idx);
+            container.appendChild(btn);
+        });
+
+        if (countInCurrentCat === 0) {
+            container.innerHTML = `<span style="font-size:0.75rem; color:#94a3b8; font-style:italic;">Chưa có Pattern loại này.</span>`;
+        }
+
+        document.getElementById('pattern_count_info').innerText = `Tổng số: ${patternsData.length}/10 Pattern`;
+    }
+
+    function switchPatternTab(idx) {
+        activePatternIdx = idx;
+        renderPatternTabs();
+        initPatternTable();
+        drawPatternChart();
+        calculateProfile();
+    }
+
+    function createNewPattern() {
+        if (patternsData.length >= 10) {
+            alert("Đã đạt giới hạn tối đa 10 Pattern!");
+            return;
+        }
+
+        const namePrompt = currentCategoryFilter === 'demand' ? 'Tên Pattern Nhu cầu mới:' : 'Tên Pattern Áp lực mới:';
+        const name = prompt(namePrompt, "Pattern " + (patternsData.length + 1));
+        if (!name || name.trim() === "") return;
+
+        const colors = ["#0284c7", "#d83b01", "#15803d", "#7c3aed", "#db2777", "#ea580c", "#059669", "#d97706"];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+        const newPat = {
+            id: "p_custom_" + Date.now(),
+            name: name.trim(),
+            type: currentCategoryFilter,
+            isDefault: false,
+            color: randomColor,
+            values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        };
+
+        patternsData.push(newPat);
+        activePatternIdx = patternsData.length - 1;
+
+        savePatterns();
+        renderPatternTabs();
+        initPatternTable();
+        updatePatternSelectBoxes();
+        drawPatternChart();
+        calculateProfile();
+    }
+
+    function deletePattern(idx) {
+        if (confirm(`Bạn có chắc chắn muốn xóa Pattern "${patternsData[idx].name}"?`)) {
+            patternsData.splice(idx, 1);
+            if (activePatternIdx >= patternsData.length) activePatternIdx = Math.max(0, patternsData.length - 1);
+            savePatterns();
+            renderPatternTabs();
+            initPatternTable();
+            updatePatternSelectBoxes();
+            drawPatternChart();
+            calculateProfile();
+        }
+    }
+
+    function initPatternTable() {
+        const tbody = document.getElementById('patternTbody');
+        tbody.innerHTML = '';
+        let pat = patternsData[activePatternIdx];
+        
+        if (!pat || pat.type !== currentCategoryFilter) {
+            document.getElementById('pattern_name_input').value = "";
+            document.getElementById('pattern_name_input').disabled = true;
+            return;
+        }
+
+        document.getElementById('pattern_name_input').disabled = false;
+        document.getElementById('pattern_name_input').value = pat.name;
+
+        for (let h = 0; h < 24; h++) {
+            let hStr = (h < 10 ? '0' + h : '' + h) + ':00';
+            let val = pat.values[h];
+            let cls = val === 0 ? "pat-val-zero" : "pat-val-active";
+
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight:600; color:#475569;">${hStr}</td>
+                <td><input type="number" id="pat_${h}" class="${cls}" value="${val.toFixed(2)}" step="0.05" onchange="updatePatternVal(${h}, this)"></td>
+            `;
+            tbody.appendChild(tr);
+        }
+    }
+
+    function updatePatternName(newName) {
+        if (patternsData[activePatternIdx]) {
+            patternsData[activePatternIdx].name = newName;
+            savePatterns();
+            renderPatternTabs();
+            updatePatternSelectBoxes();
+            drawPatternChart();
+        }
+    }
+
+    function updatePatternVal(h, inputElem) {
+        let val = parseFloat(inputElem.value) || 0;
+        if (patternsData[activePatternIdx]) {
+            patternsData[activePatternIdx].values[h] = val;
+            inputElem.className = val === 0 ? "pat-val-zero" : "pat-val-active";
+            savePatterns();
+            drawPatternChart();
+            calculateProfile();
+        }
+    }
+
+    function updatePatternSelectBoxes() {
+        const selects = [
+            { id: 'pat_node1_mang', type: 'pressure' },
+            { id: 'pat_node1_bom', type: 'pressure' },
+            { id: 'pat_node2', type: 'demand' },
+            { id: 'pat_node3', type: 'demand' },
+            { id: 'pat_node4', type: 'demand' },
+            { id: 'pat_node5', type: 'demand' }
+        ];
+
+        selects.forEach(item => {
+            const sel = document.getElementById(item.id);
+            if(!sel) return;
+            const prevVal = sel.value;
+            sel.innerHTML = '';
+            
+            patternsData.forEach((p, pIdx) => {
+                if (p.type === item.type) {
+                    const opt = document.createElement('option');
+                    opt.value = pIdx;
+                    opt.textContent = p.name;
+                    opt.style.color = p.color;
+                    opt.style.fontWeight = "bold";
+                    sel.appendChild(opt);
+                }
+            });
+
+            if(sel.querySelector(`option[value="${prevVal}"]`)) {
+                sel.value = prevVal;
+            } else if (sel.options.length > 0) {
+                sel.selectedIndex = 0;
+            }
+            applySelectColor(sel);
+        });
+    }
+
+    function onP1SourceTypeChange() {
+        const type = document.getElementById('p1_source_type').value;
+        const pumpGroup = document.getElementById('pump_group_container');
+        pumpGroup.style.display = (type === 'pump_station') ? 'block' : 'none';
+        calculateProfile();
+    }
+
+    function onQInputChange(nodeIdx) {
+        const qVal = parseFloat(document.getElementById(`q_out${nodeIdx}`).value) || 0;
+        const rowPat = document.getElementById(`row_pat_${nodeIdx}`);
+        if (rowPat) rowPat.style.display = (qVal > 0) ? "flex" : "none";
+        calculateProfile();
+    }
+
+    function onNodePatternChange(nodeIdx) {
+        const sel = document.getElementById(`pat_node${nodeIdx}`);
+        applySelectColor(sel);
+        calculateProfile();
+    }
+
+    function applySelectColor(sel) {
+        if (!sel) return;
+        let val = parseInt(sel.value) || 0;
+        if(patternsData[val]) {
+            sel.style.color = patternsData[val].color;
+            sel.style.fontWeight = "bold";
+        }
+    }
+
+    function togglePatternPanel() {
+        const p = document.getElementById('patternPanel');
+        p.style.display = p.style.display === 'block' ? 'none' : 'block';
+        if (p.style.display === 'block') {
+            renderPatternTabs();
+            drawPatternChart();
+        }
+    }
+
+    function drawPatternChart() {
+        const canvas = document.getElementById('patternCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = canvas.parentElement.clientWidth - 12;
+        canvas.height = canvas.parentElement.clientHeight - 25;
+
+        const W = canvas.width;
+        const H = canvas.height;
+        const padL = 30, padR = 15, padT = 15, padB = 20;
+
+        ctx.clearRect(0, 0, W, H);
+
+        let maxVal = 1.8;
+
+        function getX(h) { return padL + (h / 23) * (W - padL - padR); }
+        function getY(v) { return H - padB - (v / maxVal) * (H - padT - padB); }
+
+        ctx.strokeStyle = "#f1f5f9"; ctx.lineWidth = 1;
+        for (let v = 0; v <= maxVal; v += 0.4) {
+            let y = getY(v);
+            ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+            ctx.fillStyle = "#94a3b8"; ctx.font = "8px sans-serif";
+            ctx.fillText(v.toFixed(1), 5, y + 3);
+        }
+
+        ctx.textAlign = "center";
+        for (let h = 0; h < 24; h += 3) {
+            let x = getX(h);
+            let hStr = (h < 10 ? '0' + h : '' + h) + 'h';
+            ctx.fillStyle = "#94a3b8"; ctx.font = "8px sans-serif";
+            ctx.fillText(hStr, x, H - 5);
+        }
+
+        patternsData.forEach((patObj, pIdx) => {
+            if (patObj.type !== currentCategoryFilter) return;
+
+            ctx.beginPath();
+            ctx.moveTo(getX(0), getY(patObj.values[0]));
+            for (let h = 1; h < 24; h++) ctx.lineTo(getX(h), getY(patObj.values[h]));
+            
+            ctx.strokeStyle = patObj.color;
+            ctx.lineWidth = pIdx === activePatternIdx ? 2.5 : 1.2;
+            if (pIdx !== activePatternIdx) ctx.setLineDash([4, 3]);
+            else ctx.setLineDash([]);
+            
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            for (let h = 0; h < 24; h++) {
+                let x = getX(h);
+                let y = getY(patObj.values[h]);
+                ctx.beginPath(); ctx.arc(x, y, pIdx === activePatternIdx ? 3 : 1.8, 0, Math.PI * 2);
+                ctx.fillStyle = patObj.color; ctx.fill();
+            }
+        });
+    }
+
+    function onSliderChange(h) {
+        currentHour = parseInt(h);
+        document.getElementById('simTimeText').innerText = `⏰ Giờ: ${currentHour < 10 ? '0' + currentHour : currentHour}:00`;
+        drawPatternChart();
+        calculateProfile();
+    }
+
+    function togglePlay() {
+        isPlaying = !isPlaying;
+        const btn = document.getElementById('btnPlay');
+        const icon = document.getElementById('playIcon');
+        
+        if (isPlaying) {
+            btn.style.background = '#d83b01';
+            icon.innerText = '⏸';
+            timerId = setInterval(() => {
+                currentHour = (currentHour + 1) % 24;
+                document.getElementById('timeSlider').value = currentHour;
+                onSliderChange(currentHour);
+            }, 1000);
+        } else {
+            btn.style.background = '#0284c7';
+            icon.innerText = '▶';
+            clearInterval(timerId);
+        }
+    }
+
+    function updatePipeList(segIdx) {
+        const segStr = segIdx === 1 ? '12' : segIdx === 2 ? '23' : segIdx === 3 ? '34' : '45';
+        const mat = document.getElementById(`mat${segStr}`).value;
+        const pn = document.getElementById(`pn${segStr}`).value;
+        const dnSelect = document.getElementById(`dn${segStr}`);
+        
+        const list = getPipeDb(mat, pn);
+
+        dnSelect.innerHTML = '';
+        list.forEach(pipe => {
+            const opt = document.createElement('option');
+            opt.value = pipe.din;
+            opt.textContent = `DN${pipe.dn}`;
+            if (pipe.dn === 500) opt.selected = true;
+            dnSelect.appendChild(opt);
+        });
+
+        if (!dnSelect.value && list.length > 0) dnSelect.selectedIndex = Math.min(5, list.length - 1);
+        calculateProfile();
+    }
+
+    function calcHf(L, Q_m3h, C, Di_mm) {
+        if (Q_m3h <= 0 || Di_mm <= 0 || L <= 0) return 0;
+        const Q_m3s = Q_m3h / 3600;
+        const D_m = Di_mm / 1000;
+        return (11.737 * L * Math.pow(Q_m3s, 1.852)) / (Math.pow(C, 1.852) * Math.pow(D_m, 4.87));
+    }
+
+    function calcVelocity(Q_m3h, Di_mm) {
+        if (Q_m3h <= 0 || Di_mm <= 0) return 0;
+        const Q_m3s = Q_m3h / 3600;
+        const D_m = Di_mm / 1000;
+        return Q_m3s / ((Math.PI * Math.pow(D_m, 2)) / 4);
+    }
+
+    // TÍNH TOÁN THỦY LỰC MÔ HÌNH 5 NÚT
+    function calculateProfile() {
+        ['12', '23', '34', '45'].forEach(s => {
+            const dinVal = parseFloat(document.getElementById(`dn${s}`).value) || 0;
+            document.getElementById(`sub${s}`).innerHTML = `D<sub>in</sub>: <b>${dinVal.toFixed(1)}</b> mm`;
+        });
+
+        const hourStr = (currentHour < 10 ? '0' + currentHour : currentHour) + ':00';
+        document.getElementById('lblCurrentHour').innerText = hourStr;
+
+        const z1 = parseFloat(document.getElementById('z1').value) || 0;
+        const z2 = parseFloat(document.getElementById('z2').value) || 0;
+        const z3 = parseFloat(document.getElementById('z3').value) || 0;
+        const z4 = parseFloat(document.getElementById('z4').value) || 0;
+        const z5 = parseFloat(document.getElementById('z5').value) || 0;
+
+        const qOut2Ngd = parseFloat(document.getElementById('q_out2').value) || 0;
+        const qOut3Ngd = parseFloat(document.getElementById('q_out3').value) || 0;
+        const qOut4Ngd = parseFloat(document.getElementById('q_out4').value) || 0;
+        const qOut5Ngd = parseFloat(document.getElementById('q_out5').value) || 0;
+
+        const pIdx2 = parseInt(document.getElementById('pat_node2').value) || 0;
+        const pIdx3 = parseInt(document.getElementById('pat_node3').value) || 0;
+        const pIdx4 = parseInt(document.getElementById('pat_node4').value) || 0;
+        const pIdx5 = parseInt(document.getElementById('pat_node5').value) || 0;
+
+        const ct2 = patternsData[pIdx2] ? patternsData[pIdx2].values[currentHour] : 1;
+        const ct3 = patternsData[pIdx3] ? patternsData[pIdx3].values[currentHour] : 1;
+        const ct4 = patternsData[pIdx4] ? patternsData[pIdx4].values[currentHour] : 1;
+        const ct5 = patternsData[pIdx5] ? patternsData[pIdx5].values[currentHour] : 1;
+
+        const qOut2 = (qOut2Ngd / 24) * ct2;
+        const qOut3 = (qOut3Ngd / 24) * ct3;
+        const qOut4 = (qOut4Ngd / 24) * ct4;
+        const qOut5 = (qOut5Ngd / 24) * ct5;
+
+        // CẤP ÁP LỰC TẠI NÚT 1
+        const p1SourceType = document.getElementById('p1_source_type').value;
+        const p1MangBq = parseFloat(document.getElementById('p1_mang_bq').value) || 0;
+        const pIdx1Mang = parseInt(document.getElementById('pat_node1_mang').value) || 0;
+        const ct1Mang = patternsData[pIdx1Mang] ? patternsData[pIdx1Mang].values[currentHour] : 1;
+        const p1MangActual = p1MangBq * ct1Mang;
+
+        let p1Avail = p1MangActual;
+        let isPumpActive = false;
+        let isPumpStationMode = (p1SourceType === 'pump_station');
+
+        if (isPumpStationMode) {
+            const p1BomTk = parseFloat(document.getElementById('p1_bom_tk').value) || 0;
+            const pIdx1Bom = parseInt(document.getElementById('pat_node1_bom').value) || 0;
+            const ct1Bom = patternsData[pIdx1Bom] ? patternsData[pIdx1Bom].values[currentHour] : 0;
+            const p1BomActual = p1BomTk * ct1Bom;
+
+            if (p1BomActual > 0) {
+                p1Avail = p1BomActual;
+                isPumpActive = true;
+            } else {
+                p1Avail = p1MangActual;
+                isPumpActive = false;
+            }
+        }
+
+        const statusLbl = document.getElementById('p1_status_lbl');
+        if (isPumpStationMode) {
+            if (isPumpActive) {
+                statusLbl.innerHTML = `⚡ BƠM ĐANG CHẠY: <b>P1 = ${p1Avail.toFixed(1)}m</b>`;
+                statusLbl.style.background = "linear-gradient(135deg, #f3e8ff, #e9d5ff)";
+                statusLbl.style.color = "#6b21a8";
+                statusLbl.style.border = "1px solid #c084fc";
+            } else {
+                statusLbl.innerHTML = `🛑 BƠM NGHỈ ➔ ÁP MẠNG: <b>P1 = ${p1Avail.toFixed(1)}m</b>`;
+                statusLbl.style.background = "linear-gradient(135deg, #fef2f2, #fee2e2)";
+                statusLbl.style.color = "#991b1b";
+                statusLbl.style.border = "1px solid #fca5a5";
+            }
+        } else {
+            statusLbl.innerHTML = `💧 CẤP ÁP MẠNG: <b>P1 = ${p1Avail.toFixed(1)}m</b>`;
+            statusLbl.style.background = "linear-gradient(135deg, #e0f2fe, #bae6fd)";
+            statusLbl.style.color = "#0369a1";
+            statusLbl.style.border = "1px solid #38bdf8";
+        }
+
+        const l12 = parseFloat(document.getElementById('l12').value) || 0;
+        const l23 = parseFloat(document.getElementById('l23').value) || 0;
+        const l34 = parseFloat(document.getElementById('l34').value) || 0;
+        const l45 = parseFloat(document.getElementById('l45').value) || 0;
+
+        const mat12 = document.getElementById('mat12').value;
+        const mat23 = document.getElementById('mat23').value;
+        const mat34 = document.getElementById('mat34').value;
+        const mat45 = document.getElementById('mat45').value;
+
+        const c12 = MATERIAL_C[mat12] || 140;
+        const c23 = MATERIAL_C[mat23] || 140;
+        const c34 = MATERIAL_C[mat34] || 140;
+        const c45 = MATERIAL_C[mat45] || 140;
+
+        const di12 = parseFloat(document.getElementById('dn12').value) || 1;
+        const di23 = parseFloat(document.getElementById('dn23').value) || 1;
+        const di34 = parseFloat(document.getElementById('dn34').value) || 1;
+        const di45 = parseFloat(document.getElementById('dn45').value) || 1;
+
+        const q45 = qOut5;
+        const q34 = q45 + qOut4;
+        const q23 = q34 + qOut3;
+        const q12 = q23 + qOut2;
+
+        const v12 = calcVelocity(q12, di12);
+        const v23 = calcVelocity(q23, di23);
+        const v34 = calcVelocity(q34, di34);
+        const v45 = calcVelocity(q45, di45);
+
+        const hf12 = calcHf(l12, q12, c12, di12);
+        const hf23 = calcHf(l23, q23, c23, di23);
+        const hf34 = calcHf(l34, q34, c34, di34);
+        const hf45 = calcHf(l45, q45, c45, di45);
+        const hfTotal = hf12 + hf23 + hf34 + hf45;
+
+        const H1 = z1 + p1Avail;
+        const H2 = H1 - hf12;
+        const H3 = H2 - hf23;
+        const H4 = H3 - hf34;
+        const H5 = H4 - hf45;
+
+        const p1 = p1Avail;
+        const p2 = H2 - z2;
+        const p3 = H3 - z3;
+        const p4 = H4 - z4;
+        const p5 = H5 - z5;
+
+        const totalLengthKm = (l12 + l23 + l34 + l45) / 1000;
+        document.getElementById('res_total_length').innerText = totalLengthKm.toFixed(1) + " km";
+        document.getElementById('res_total_q').innerText = q12.toFixed(1) + " m³/h";
+        document.getElementById('res_hf_total').innerHTML = hfTotal.toFixed(2) + " m";
+
+        const warnBox = document.getElementById('warn_box');
+        let minP = Math.min(p2, p3, p4, p5);
+
+        if (minP < 0) {
+            warnBox.className = "warning-box warn-red";
+            warnBox.innerHTML = `⚠️ <b>CẢNH BÁO NGUY HIỂM TẠI GIỜ ${hourStr}:</b> Xảy ra chân không/áp lực âm (P<sub>min</sub> = ${minP.toFixed(2)}m). Cần nâng áp lực bơm hoặc nâng cỡ ống!`;
+            warnBox.style.display = "block";
+        } else {
+            warnBox.className = "warning-box warn-green";
+            warnBox.innerHTML = `✅ <b>AN TOÀN THỦY LỰC LÚC ${hourStr}:</b> Tất cả các nút đều thỏa mãn áp lực dư duy trì dòng chảy.`;
+            warnBox.style.display = "block";
+        }
+
+        drawProfileCanvas({
+            nodes: [
+                { id: "1", label: "Điểm đầu", dist: 0, z: z1, H: H1, p: p1, qOutH: 0 },
+                { id: "2", label: "", dist: l12, z: z2, H: H2, p: p2, qOutH: qOut2 },
+                { id: "3", label: "", dist: l12 + l23, z: z3, H: H3, p: p3, qOutH: qOut3 },
+                { id: "4", label: "", dist: l12 + l23 + l34, z: z4, H: H4, p: p4, qOutH: qOut4 },
+                { id: "5", label: "Điểm cuối", dist: l12 + l23 + l34 + l45, z: z5, H: H5, p: p5, qOutH: qOut5 }
+            ],
+            segments: [
+                { q: q12, v: v12, hf: hf12 },
+                { q: q23, v: v23, hf: hf23 },
+                { q: q34, v: v34, hf: hf34 },
+                { q: q45, v: v45, hf: hf45 }
+            ],
+            totalLengthKm: totalLengthKm,
+            totalQ: q12,
+            totalHf: hfTotal,
+            hourText: hourStr,
+            isPumpStationMode: isPumpStationMode,
+            isPumpActive: isPumpActive
+        });
+    }
+
+    function drawProfileCanvas(data) {
+        const canvas = document.getElementById('profileCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = 380;
+
+        const W = canvas.width;
+        const H = canvas.height;
+        const padL = 55, padR = 50, padT = 75, padB = 75;
+
+        ctx.clearRect(0, 0, W, H);
+
+        const nodes = data.nodes;
+        const segs = data.segments;
+        const maxDist = nodes[4].dist || 1;
+        
+        let allHeights = nodes.map(n => n.z).concat(nodes.map(n => n.H));
+        let minVal = Math.min(...allHeights) - 5;
+        let maxVal = Math.max(...allHeights) + 10;
+        if (minVal < 0) minVal = 0;
+
+        function getX(dist) { return padL + (dist / maxDist) * (W - padL - padR); }
+        function getY(val) { return H - padB - ((val - minVal) / (maxVal - minVal)) * (H - padT - padB); }
+
+        // Lưới ngang
+        ctx.strokeStyle = "#f1f5f9"; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+        for (let v = Math.floor(minVal); v <= maxVal; v += 10) {
+            let y = getY(v);
+            ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+            ctx.fillStyle = "#94a3b8"; ctx.font = "10px sans-serif";
+            ctx.fillText(v + "m", 20, y + 3);
+        }
+        ctx.setLineDash([]);
+
+        // Đường địa hình Z (Xanh nước biển)
+        ctx.beginPath();
+        ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].z));
+        for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].z));
+        ctx.lineTo(getX(nodes[4].dist), H - padB);
+        ctx.lineTo(getX(nodes[0].dist), H - padB);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(2, 132, 199, 0.12)"; ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].z));
+        for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].z));
+        ctx.strokeStyle = "#0284c7"; ctx.lineWidth = 3; ctx.stroke();
+
+        // Đường áp lực H (Nét đứt)
+        ctx.beginPath();
+        ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].H));
+        for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].H));
+        ctx.strokeStyle = "#0284c7"; ctx.lineWidth = 2.5; ctx.setLineDash([6, 4]); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Icon Bơm
+        if (data.isPumpStationMode) {
+            let x1 = getX(nodes[0].dist);
+            let z1Y = getY(nodes[0].z);
+            let pumpX = x1 + 22;
+            let pumpY = z1Y - 14;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(pumpX, pumpY, 11, 0, Math.PI * 2);
+            if (data.isPumpActive) {
+                ctx.fillStyle = `rgba(22, 163, 74, ${pulseOpacity})`;
+                ctx.strokeStyle = "#15803d";
+            } else {
+                ctx.fillStyle = "#dc2626";
+                ctx.strokeStyle = "#991b1b";
+            }
+            ctx.lineWidth = 2;
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(pumpX - 7, pumpY + 7);
+            ctx.lineTo(pumpX + 8, pumpY);
+            ctx.lineTo(pumpX - 7, pumpY - 7);
+            ctx.closePath();
+            ctx.fillStyle = "#ffffff";
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawHfSubscript(x, y, hfVal, color) {
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.font = "bold 10px sans-serif";
+            let valStr = ` = ${hfVal.toFixed(2)} m`;
+            let wH = ctx.measureText("H").width;
+            let wVal = ctx.measureText(valStr).width;
+
+            ctx.font = "bold 8px sans-serif";
+            let wF = ctx.measureText("f").width;
+
+            let totalW = wH + wF + wVal;
+            let startX = x - totalW / 2;
+
+            ctx.font = "bold 10px sans-serif";
+            ctx.fillText("H", startX + wH / 2, y);
+
+            ctx.font = "bold 8px sans-serif";
+            ctx.fillText("f", startX + wH + wF / 2, y + 3);
+
+            ctx.font = "bold 10px sans-serif";
+            ctx.fillText(valStr, startX + wH + wF + wVal / 2, y);
+            ctx.restore();
+        }
+
+        for (let i = 0; i < 4; i++) {
+            let xMid = (getX(nodes[i].dist) + getX(nodes[i+1].dist)) / 2;
+            let yHMid = (getY(nodes[i].H) + getY(nodes[i+1].H)) / 2;
+            let segInfo = segs[i];
+
+            ctx.font = "bold 10px sans-serif";
+            ctx.textAlign = "center";
+
+            ctx.fillStyle = "#005a9e"; ctx.fillText(`Q = ${segInfo.q.toFixed(1)} m³/h`, xMid, yHMid + 18);
+            ctx.fillStyle = "#15803d"; ctx.fillText(`v = ${segInfo.v.toFixed(2)} m/s`, xMid, yHMid + 32);
+            
+            drawHfSubscript(xMid, yHMid + 46, segInfo.hf, "#b91c1c");
+        }
+
+        let topY = 22;
+        let x0 = getX(0);
+        let x4 = getX(nodes[4].dist);
+
+        ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1.8;
+        ctx.beginPath(); ctx.moveTo(x0, topY); ctx.lineTo(x4, topY); ctx.stroke();
+        
+        ctx.beginPath(); ctx.moveTo(x0 + 6, topY - 4); ctx.lineTo(x0, topY); ctx.lineTo(x0 + 6, topY + 4); ctx.fillStyle = "#94a3b8"; ctx.fill();
+        ctx.beginPath(); ctx.moveTo(x4 - 6, topY - 4); ctx.lineTo(x4, topY); ctx.lineTo(x4 - 6, topY + 4); ctx.fillStyle = "#94a3b8"; ctx.fill();
+
+        let p1 = `LÚC ${data.hourText} | L = ${data.totalLengthKm.toFixed(1)} km | Q = ${data.totalQ.toFixed(1)} m³/h | H`;
+        
+        ctx.font = "bold 11.5px sans-serif";
+        let w1 = ctx.measureText(p1).width;
+        ctx.font = "bold 9px sans-serif";
+        let wF_top = ctx.measureText("f").width;
+        ctx.font = "bold 11.5px sans-serif";
+        let w2 = ctx.measureText(` = ${data.totalHf.toFixed(2)} m`).width;
+
+        let totalTopW = w1 + wF_top + w2;
+        let startX = (x0 + x4)/2 - totalTopW/2;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(startX - 6, topY - 8, totalTopW + 12, 16);
+
+        ctx.fillStyle = "#b91c1c"; ctx.textAlign = "left";
+        ctx.font = "bold 11.5px sans-serif";
+        ctx.fillText(p1, startX, topY + 4);
+        
+        ctx.font = "bold 9px sans-serif";
+        ctx.fillText("f", startX + w1, topY + 7);
+        
+        ctx.font = "bold 11.5px sans-serif";
+        ctx.fillText(` = ${data.totalHf.toFixed(2)} m`, startX + w1 + wF_top, topY + 4);
+
+        nodes.forEach((n) => {
+            let x = getX(n.dist);
+            let yZ = getY(n.z);
+            let yH = getY(n.H);
+
+            ctx.beginPath(); ctx.moveTo(x, yZ); ctx.lineTo(x, yH);
+            ctx.strokeStyle = n.p < 0 ? "#dc2626" : "#cbd5e1"; ctx.lineWidth = 1.5; ctx.stroke();
+
+            ctx.beginPath(); ctx.arc(x, yZ, 5, 0, Math.PI * 2); ctx.fillStyle = "#dc2626"; ctx.fill();
+            ctx.beginPath(); ctx.arc(x, yH, 4, 0, Math.PI * 2); ctx.fillStyle = "#0284c7"; ctx.fill();
+
+            let circleY = H - padB + 18;
+            ctx.beginPath(); ctx.arc(x, circleY, 9, 0, Math.PI * 2);
+            ctx.fillStyle = "#ffffff"; ctx.fill();
+            ctx.strokeStyle = "#005a36"; ctx.lineWidth = 1.5; ctx.stroke();
+
+            ctx.fillStyle = "#005a36"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center";
+            ctx.fillText(n.id, x, circleY + 4);
+
+            if (n.label) {
+                ctx.font = "10px sans-serif"; ctx.fillStyle = "#005a36";
+                ctx.fillText(n.label, x, circleY + 20);
+            }
+
+            let lineStartY = n.label ? circleY + 25 : circleY + 12;
+            ctx.beginPath(); ctx.moveTo(x, lineStartY); ctx.lineTo(x, H - padB + 48);
+            ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1; ctx.setLineDash([2, 2]); ctx.stroke(); ctx.setLineDash([]);
+
+            ctx.font = "10px sans-serif"; ctx.fillStyle = "#475569";
+            
+            if (n.id === "5") {
+                ctx.textAlign = "right";
+                ctx.fillText(`Z = ${n.z}m`, x + 15, H - padB + 58);
+                if (n.qOutH > 0) {
+                    ctx.fillStyle = "#b91c1c";
+                    ctx.fillText(`Q_n-5 = ${n.qOutH.toFixed(1)} m³/h`, x + 15, H - padB + 70);
+                }
+            } else {
+                ctx.textAlign = "center";
+                ctx.fillText(`Z = ${n.z}m`, x, H - padB + 58);
+                if (n.qOutH > 0) {
+                    ctx.fillStyle = "#b91c1c";
+                    ctx.fillText(`Q_n-${n.id} = ${n.qOutH.toFixed(1)} m³/h`, x, H - padB + 70);
+                }
+            }
+
+            ctx.fillStyle = n.p < 0 ? "#dc2626" : "#0284c7"; ctx.font = "bold 11px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(`P=${n.p.toFixed(1)}m`, x, yH - 8);
+        });
+
+        ctx.fillStyle = "#0284c7"; ctx.fillRect(padL + 10, 48, 14, 8);
+        ctx.fillStyle = "#334155"; ctx.font = "11px sans-serif"; ctx.textAlign = "left";
+        ctx.fillText("Cao độ Z (m)", padL + 30, 55);
+
+        ctx.strokeStyle = "#0284c7"; ctx.lineWidth = 2; ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(padL + 130, 52); ctx.lineTo(padL + 150, 52); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = "#334155"; ctx.fillText("Đường áp lực H (m)", padL + 158, 55);
+    }
+
+    setInterval(() => {
+        pulseOpacity += pulseDirection;
+        if (pulseOpacity <= 0.3 || pulseOpacity >= 1) {
+            pulseDirection = -pulseDirection;
+        }
+        calculateProfile();
+    }, 100);
+
+    window.onload = function() {
+        loadPatterns();
+        renderPatternTabs();
+        updatePatternSelectBoxes();
+        initPatternTable();
+        updatePipeList(1);
+        updatePipeList(2);
+        updatePipeList(3);
+        updatePipeList(4);
+        onQInputChange(2);
+        onQInputChange(3);
+        onQInputChange(4);
+        onQInputChange(5);
+        onP1SourceTypeChange();
+        calculateProfile();
+    };
+
+    window.onresize = function() {
+        drawPatternChart();
+        calculateProfile();
+    };
+</script>
+</body>
+</html>
