@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sơ Đồ Thủy Lực Đa Pattern 24h (5 Nút) - HueWACO</title>
+    <title>Mô hình thủy lực mạng đường ống cấp nước - HueWACO</title>
     <style>
         :root {
             --excel-green: #005a36;
@@ -118,7 +118,7 @@
 <body>
 
 <div class="container">
-    <div class="header-bar">TÍNH TOÁN THỦY LỰC & MÔ PHỎNG ĐA PATTERN 24H (MÔ HÌNH 5 NÚT) - HUEWACO</div>
+    <div class="header-bar">MÔ HÌNH THỦY LỰC MẠNG CẤP NƯỚC (MÔ HÌNH 5 NÚT) - HUEWACO</div>
     
     <div class="content">
         <!-- ĐIỀU KHIỂN THỜI GIAN -->
@@ -166,7 +166,7 @@
                     </table>
                 </div>
                 <div class="pattern-chart-wrapper">
-                    <div class="pattern-chart-title">So sánh Đồ thị Biến thiên các Pattern</div>
+                    <div class="pattern-chart-title">Đồ thị </div>
                     <canvas id="patternCanvas" class="pattern-chart-canvas"></canvas>
                 </div>
             </div>
@@ -174,9 +174,9 @@
 
         <!-- KẾT QUẢ TỔNG THỂ -->
         <div class="section-title">
-            <span>I. Kết quả Thủy lực lúc <span id="lblCurrentHour" style="color:#0284c7;">08:00</span></span>
+            <span>I. Kết quả thủy lực lúc <span id="lblCurrentHour" style="color:#0284c7;">08:00</span></span>
             <span style="font-weight: normal; font-size: 0.75rem; color: #334155; text-transform: none;">
-                Mô phỏng thủy lực biến thiên áp lực & nhu cầu dùng nước 24h
+                Mô phỏng thủy lực theo nhu cầu dùng nước 24h
             </span>
         </div>
 
@@ -197,8 +197,8 @@
 
         <div id="warn_box" class="warning-box"></div>
 
-        <!-- SƠ ĐỒ TRẮC DỌC & BỐ CỤC NHẬP LIỆU TÁCH 2 DÃY (4 ĐOẠN - 5 NÚT) -->
-        <div class="section-title">II. Sơ đồ Trắc dọc & Nhập dữ liệu phân đoạn (Mô hình 5 nút)</div>
+        <!-- SƠ ĐỒ TRẮC DỌC TOÀN TUYẾN ỐNG -->
+        <div class="section-title">II. Sơ đồ trắc dọc toàn tuyến (Mô hình 5 nút)</div>
         
         <div class="diagram-wrapper">
             <canvas id="profileCanvas"></canvas>
@@ -218,7 +218,7 @@
                             </select>
                         </div>
                         <div class="input-row">
-                            <label>Áp lực PN:</label>
+                            <label>Cấp áp lực PN:</label>
                             <select id="pn12" onchange="updatePipeList(1)">
                                 <option value="PN10" selected>PN10 (Class C40/K9)</option>
                                 <option value="PN16">PN16 (Class C40/K9)</option>
@@ -241,7 +241,7 @@
                             </select>
                         </div>
                         <div class="input-row">
-                            <label>Áp lực PN:</label>
+                            <label>Cấp áp lực PN:</label>
                             <select id="pn23" onchange="updatePipeList(2)">
                                 <option value="PN10" selected>PN10 (Class C40/K9)</option>
                                 <option value="PN16">PN16 (Class C40/K9)</option>
@@ -264,7 +264,7 @@
                             </select>
                         </div>
                         <div class="input-row">
-                            <label>Áp lực PN:</label>
+                            <label>Cấp áp lực PN:</label>
                             <select id="pn34" onchange="updatePipeList(3)">
                                 <option value="PN10" selected>PN10 (Class C40/K9)</option>
                                 <option value="PN16">PN16 (Class C40/K9)</option>
@@ -287,7 +287,7 @@
                             </select>
                         </div>
                         <div class="input-row">
-                            <label>Áp lực PN:</label>
+                            <label>Cấp áp lực PN:</label>
                             <select id="pn45" onchange="updatePipeList(4)">
                                 <option value="PN10" selected>PN10 (Class C40/K9)</option>
                                 <option value="PN16">PN16 (Class C40/K9)</option>
@@ -306,7 +306,7 @@
                         <div class="card-header">DỮ LIỆU NÚT 1 (NGUỒN)</div>
                         <div class="input-row"><label>Z<sub>1</sub> điểm đầu (m):</label><input type="number" id="z1" value="5.0" onchange="calculateProfile()"></div>
                         <div class="input-row">
-                            <label>Chế độ Nút 1:</label>
+                            <label>Chế độ VH:</label>
                             <select id="p1_source_type" onchange="onP1SourceTypeChange()">
                                 <option value="network" selected>Áp lực mạng</option>
                                 <option value="pump_station">Trạm bơm tăng áp</option>
