@@ -1214,17 +1214,24 @@
 
         ctx.font = "bold 11px sans-serif";
         ctx.fillText(` = ${data.totalHf.toFixed(2)} m`, startX + w1 + wF_top, topY + 4);
-        nodes.forEach((n) => {
+            nodes.forEach((n) => {
             let x = getX(n.dist);
             let yZ = getY(n.z);
             let yH = getY(n.H);
 
-            ctx.beginPath(); ctx.moveTo(x, yZ); ctx.lineTo(x, yH);
-            ctx.strokeStyle = n.p < 0 ? "#dc2626" : "#cbd5e1"; ctx.lineWidth = 1.5; ctx.stroke();
+            // Đường cột áp đứng (dóng từ Z đến H)
+            ctx.beginPath(); 
+            ctx.moveTo(x, yZ); 
+            ctx.lineTo(x, yH);
+            ctx.strokeStyle = n.p < 0 ? "#dc2626" : "#cbd5e1"; 
+            ctx.lineWidth = 1.5; 
+            ctx.stroke();
 
+            // Điểm mút
             ctx.beginPath(); ctx.arc(x, yZ, 5, 0, Math.PI * 2); ctx.fillStyle = "#dc2626"; ctx.fill();
             ctx.beginPath(); ctx.arc(x, yH, 4, 0, Math.PI * 2); ctx.fillStyle = "#0284c7"; ctx.fill();
 
+            // Vòng tròn số thứ tự Nút
             let circleY = H - padB + 18;
             ctx.beginPath(); ctx.arc(x, circleY, 9, 0, Math.PI * 2);
             ctx.fillStyle = "#ffffff"; ctx.fill();
@@ -1238,11 +1245,20 @@
                 ctx.fillText(n.label, x, circleY + 20);
             }
 
-            ctx.fillText(`Z = ${n.z}m`, x + 15, H - padB + 54);
-            ctx.beginPath(); ctx.moveTo(x, lineStartY); ctx.lineTo(x, H - padB + 48);
-            ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1; ctx.setLineDash([2, 2]); ctx.stroke(); ctx.setLineDash([]);
+            // Đường nét đứt dóng xuống phía dưới (Đã bổ sung biến lineStartY chính xác)
+            let lineStartY = n.label ? circleY + 25 : circleY + 12;
+            ctx.beginPath(); 
+            ctx.moveTo(x, lineStartY); 
+            ctx.lineTo(x, H - padB + 48);
+            ctx.strokeStyle = "#94a3b8"; 
+            ctx.lineWidth = 1; 
+            ctx.setLineDash([2, 2]); 
+            ctx.stroke(); 
+            ctx.setLineDash([]);
 
-            ctx.font = "10px sans-serif"; ctx.fillStyle = "#475569";
+            // Hiển thị Cao độ Z và Lưu lượng rút Q
+            ctx.font = "10px sans-serif"; 
+            ctx.fillStyle = "#475569";
             
             if (n.id === "5") {
                 ctx.textAlign = "right";
@@ -1260,10 +1276,11 @@
                 }
             }
 
-        ctx.fillStyle = n.p < 0 ? "#dc2626" : "#0284c7";
-        ctx.textAlign = "center";
-        ctx.font = "bold 12px sans-serif";
-        ctx.fillText(`P=${n.p.toFixed(1)}m`, x, yH - 16);
+            // Hiển thị Áp lực P (đẩy lên cao phía trên đường H)
+            ctx.fillStyle = n.p < 0 ? "#dc2626" : "#0284c7";
+            ctx.textAlign = "center";
+            ctx.font = "bold 12px sans-serif";
+            ctx.fillText(`P=${n.p.toFixed(1)}m`, x, yH - 16);
         });
 
         ctx.fillStyle = "#0284c7"; ctx.fillRect(padL + 10, 48, 14, 8);
