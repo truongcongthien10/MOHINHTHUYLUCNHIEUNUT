@@ -1195,7 +1195,11 @@
         ctx.strokeStyle = "#cbd5e1";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.roundRect ? ctx.roundRect(startX - 6, topY - 10, totalTopW + 12, 20, 4) : ctx.rect(startX - 6, topY - 10, totalTopW + 12, 20);
+        if (typeof ctx.roundRect === "function") {
+        ctx.roundRect(startX - 6, topY - 10, totalTopW + 12, 20, 4);
+    } else {
+        ctx.rect(startX - 6, topY - 10, totalTopW + 12, 20);
+    }
         ctx.fill();
         ctx.stroke();
 
@@ -1210,7 +1214,6 @@
 
         ctx.font = "bold 11px sans-serif";
         ctx.fillText(` = ${data.totalHf.toFixed(2)} m`, startX + w1 + wF_top, topY + 4);
-
         nodes.forEach((n) => {
             let x = getX(n.dist);
             let yZ = getY(n.z);
