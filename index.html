@@ -1217,19 +1217,19 @@
         ctx.beginPath(); ctx.moveTo(x0 + 6, topY - 4); ctx.lineTo(x0, topY); ctx.lineTo(x0 + 6, topY + 4); ctx.fillStyle = "#94a3b8"; ctx.fill();
         ctx.beginPath(); ctx.moveTo(x4 - 6, topY - 4); ctx.lineTo(x4, topY); ctx.lineTo(x4 - 6, topY + 4); ctx.fillStyle = "#94a3b8"; ctx.fill();
 
-        let p1 = `LÚC ${data.hourText} | L = ${data.totalLengthKm.toFixed(1)} km | Q = ${data.totalQ.toFixed(1)} m³/h | H`;
+let p1 = `LÚC ${data.hourText} | L = ${data.totalLengthKm.toFixed(1)} km | Q = ${data.totalQ.toFixed(1)} m³/h | H`;
         
-        ctx.font = "bold 11.5px sans-serif";
+        ctx.font = "bold 12.5px sans-serif";
         let w1 = ctx.measureText(p1).width;
-        ctx.font = "bold 9px sans-serif";
+        ctx.font = "bold 10px sans-serif";
         let wF_top = ctx.measureText("f").width;
-        ctx.font = "bold 11.5px sans-serif";
+        ctx.font = "bold 12.5px sans-serif";
         let w2 = ctx.measureText(` = ${data.totalHf.toFixed(2)} m`).width;
 
         let totalTopW = w1 + wF_top + w2;
         let startX = (x0 + x4)/2 - totalTopW/2;
 
-// Vẽ phông nền trắng bo góc viền xanh đậm nổi bật
+        // Vẽ phông nền trắng bo góc viền xanh đậm nổi bật
         ctx.fillStyle = "#ffffff";
         ctx.strokeStyle = "#0284c7";
         ctx.lineWidth = 1.5;
