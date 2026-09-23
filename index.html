@@ -1001,10 +1001,36 @@
         const p4 = H4 - z4;
         const p5 = H5 - z5;
 
+    // Tính tổn thất tích lũy từ Nguồn (Nút 1) đến từng điểm tiêu thụ
+        const hf_12 = hf12;
+        const hf_13 = hf12 + hf23;
+        const hf_14 = hf12 + hf23 + hf34;
+        const hf_15 = hf12 + hf23 + hf34 + hf45;
+
+    // Cập nhật kết quả lên giao diện
         const totalLengthKm = (l12 + l23 + l34 + l45) / 1000;
         document.getElementById('res_total_length').innerText = totalLengthKm.toFixed(1) + " km";
         document.getElementById('res_total_q').innerText = q12.toFixed(1) + " m³/h";
-        document.getElementById('res_hf_total').innerHTML = hfTotal.toFixed(2) + " m";
+
+        const resHfElem = document.getElementById('res_hf_total');
+
+    // Kiểm tra xem các nút trung gian (2, 3, 4) có dùng nước không
+        const hasMidDemand = (qOut2 > 0 || qOut3 > 0 || qOut4 > 0);
+
+        if (hasMidDemand) {
+            // Khi có rút nước trung gian: Hiển thị tổn thất thực tế từ Nguồn tới từng điểm rút nước
+            let hfDetailHTML = `<div style="font-size:0.75rem; color:#0f172a; line-height:1.4;">`;
+            if (qOut2 > 0) hfDetailHTML += `H<sub>f(1➔2)</sub>: <b>${hf_12.toFixed(2)}m</b> `;
+            if (qOut3 > 0) hfDetailHTML += `H<sub>f(1➔3)</sub>: <b>${hf_13.toFixed(2)}m</b> `;
+            if (qOut4 > 0) hfDetailHTML += `H<sub>f(1➔4)</sub>: <b>${hf_14.toFixed(2)}m</b> `;
+            if (qOut5 > 0) hfDetailHTML += `<br><span style="color:#b91c1c;">H<sub>f(1➔5)</sub> (Đ.Cuối): <b>${hf_15.toFixed(2)}m</b></span>`;
+            hfDetailHTML += `</div>`;
+            
+            resHfElem.innerHTML = hfDetailHTML;
+        } else {
+            // Khi chỉ có Nút 5 dùng nước: Hiển thị tổn thất toàn tuyến đơn thuần
+            resHfElem.innerHTML = `${hf_15.toFixed(2)} m`;
+        }
 
         const warnBox = document.getElementById('warn_box');
         let minP = Math.min(p2, p3, p4, p5);
