@@ -1159,12 +1159,25 @@
             let yHMid = (getY(nodes[i].H) + getY(nodes[i+1].H)) / 2;
             let segInfo = segs[i];
 
+        // Vẽ ô phông nền trắng nhỏ đằng sau chữ Q, v, Hf của từng đoạn
+            ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+            ctx.strokeStyle = "#cbd5e1";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+        if (typeof ctx.roundRect === "function") {
+            ctx.roundRect(xMid - 45, yHMid + 6, 90, 48, 4);
+        } else {
+            ctx.rect(xMid - 45, yHMid + 6, 90, 48);
+        }
+            ctx.fill();
+            ctx.stroke();
+
+        // In thông số Q, v, Hf
             ctx.font = "bold 10px sans-serif";
             ctx.textAlign = "center";
-
             ctx.fillStyle = "#005a9e"; ctx.fillText(`Q = ${segInfo.q.toFixed(1)} m³/h`, xMid, yHMid + 18);
             ctx.fillStyle = "#15803d"; ctx.fillText(`v = ${segInfo.v.toFixed(2)} m/s`, xMid, yHMid + 32);
-            
+    
             drawHfSubscript(xMid, yHMid + 46, segInfo.hf, "#b91c1c");
         }
 
