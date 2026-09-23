@@ -63,10 +63,10 @@
         .pattern-chart-title { font-size: 0.8rem; font-weight: bold; color: #005a36; text-align: center; margin-bottom: 4px; }
         .pattern-chart-canvas { width: 100%; flex: 1; }
 
-        .result-simple-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
-        .result-card { background: #f0f9ff; border: 1px solid #bae6fd; padding: 6px; border-radius: 6px; }
-        .result-card-title { font-size: 0.75rem; color: #0369a1; font-weight: 700; text-transform: uppercase; }
-        .result-card-value { font-size: 1.1rem; font-weight: bold; color: #0284c7; }
+        .result-simple-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+        .result-card { background: #f0f9ff; border: 1.5px solid #0284c7; padding: 10px 8px; border-radius: 6px; box-shadow: 0 2px 4px rgba(2, 132, 199, 0.08); }
+        .result-card-title { font-size: 0.82rem; color: #0369a1; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .result-card-value { font-size: 1.35rem; font-weight: 800; color: #0284c7; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
         .warning-box { margin-top: 6px; padding: 6px 10px; border-radius: 4px; font-size: 0.78rem; line-height: 1.3; display: none; }
         .warn-red { background: #fef2f2; border-left: 4px solid #dc2626; color: #991b1b; }
@@ -1007,29 +1007,29 @@
         const hf_14 = hf12 + hf23 + hf34;
         const hf_15 = hf12 + hf23 + hf34 + hf45;
 
-    // Cập nhật kết quả lên giao diện
+        // Cập nhật kết quả lên giao diện
         const totalLengthKm = (l12 + l23 + l34 + l45) / 1000;
         document.getElementById('res_total_length').innerText = totalLengthKm.toFixed(1) + " km";
         document.getElementById('res_total_q').innerText = q12.toFixed(1) + " m³/h";
 
         const resHfElem = document.getElementById('res_hf_total');
 
-    // Kiểm tra xem các nút trung gian (2, 3, 4) có dùng nước không
+        // Kiểm tra xem các nút trung gian (2, 3, 4) có dùng nước không
         const hasMidDemand = (qOut2 > 0 || qOut3 > 0 || qOut4 > 0);
 
         if (hasMidDemand) {
-            // Khi có rút nước trung gian: Hiển thị tổn thất thực tế từ Nguồn tới từng điểm rút nước
-            let hfDetailHTML = `<div style="font-size:0.75rem; color:#0f172a; line-height:1.4;">`;
-            if (qOut2 > 0) hfDetailHTML += `H<sub>f(1➔2)</sub>: <b>${hf_12.toFixed(2)}m</b> `;
-            if (qOut3 > 0) hfDetailHTML += `H<sub>f(1➔3)</sub>: <b>${hf_13.toFixed(2)}m</b> `;
-            if (qOut4 > 0) hfDetailHTML += `H<sub>f(1➔4)</sub>: <b>${hf_14.toFixed(2)}m</b> `;
-            if (qOut5 > 0) hfDetailHTML += `<br><span style="color:#b91c1c;">H<sub>f(1➔5)</sub> (Đ.Cuối): <b>${hf_15.toFixed(2)}m</b></span>`;
+            // Hiển thị chữ to, đậm, nét chuẩn báo cáo
+            let hfDetailHTML = `<div style="font-size:0.9rem; color:#0f172a; line-height:1.5; font-weight:800;">`;
+            if (qOut2 > 0) hfDetailHTML += `H<sub>f(1➔2)</sub>: <span style="color:#0284c7;">${hf_12.toFixed(2)}m</span> `;
+            if (qOut3 > 0) hfDetailHTML += `H<sub>f(1➔3)</sub>: <span style="color:#0284c7;">${hf_13.toFixed(2)}m</span> `;
+            if (qOut4 > 0) hfDetailHTML += `H<sub>f(1➔4)</sub>: <span style="color:#0284c7;">${hf_14.toFixed(2)}m</span> `;
+            if (qOut5 > 0) hfDetailHTML += `<br><span style="color:#b91c1c; font-size:1rem;">H<sub>f(1➔5)</sub> (Đ.Cuối): ${hf_15.toFixed(2)}m</span>`;
             hfDetailHTML += `</div>`;
             
             resHfElem.innerHTML = hfDetailHTML;
         } else {
-            // Khi chỉ có Nút 5 dùng nước: Hiển thị tổn thất toàn tuyến đơn thuần
-            resHfElem.innerHTML = `${hf_15.toFixed(2)} m`;
+            // Khi chỉ có Nút 5 dùng nước
+            resHfElem.innerHTML = `<span style="font-size:1.35rem; font-weight:800; color:#b91c1c;">${hf_15.toFixed(2)} m</span>`;
         }
 
         const warnBox = document.getElementById('warn_box');
@@ -1229,31 +1229,30 @@
         let totalTopW = w1 + wF_top + w2;
         let startX = (x0 + x4)/2 - totalTopW/2;
 
-    // Vẽ nền trắng bo góc cho nhóm thông số Q, v, Hf
+// Vẽ phông nền trắng bo góc viền xanh đậm nổi bật
         ctx.fillStyle = "#ffffff";
-        ctx.strokeStyle = "#cbd5e1";
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#0284c7";
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
         if (typeof ctx.roundRect === "function") {
-        ctx.roundRect(startX - 6, topY - 10, totalTopW + 12, 20, 4);
-    } else {
-        ctx.rect(startX - 6, topY - 10, totalTopW + 12, 20);
-    }
+            ctx.roundRect(startX - 8, topY - 12, totalTopW + 16, 24, 4);
+        } else {
+            ctx.rect(startX - 8, topY - 12, totalTopW + 16, 24);
+        }
         ctx.fill();
         ctx.stroke();
 
-    // Vẽ chữ Q, v, Hf màu đậm rõ nét
+        // Chữ in đậm to nét (12.5px bold)
         ctx.fillStyle = "#0f172a"; 
         ctx.textAlign = "left";
-        ctx.font = "bold 11px sans-serif";
+        ctx.font = "bold 12.5px sans-serif";
         ctx.fillText(p1, startX, topY + 4);
 
-        ctx.font = "bold 9px sans-serif";
+        ctx.font = "bold 10px sans-serif";
         ctx.fillText("f", startX + w1, topY + 7);
 
-        ctx.font = "bold 11px sans-serif";
+        ctx.font = "bold 12.5px sans-serif";
         ctx.fillText(` = ${data.totalHf.toFixed(2)} m`, startX + w1 + wF_top, topY + 4);
-            nodes.forEach((n) => {
             let x = getX(n.dist);
             let yZ = getY(n.z);
             let yH = getY(n.H);
