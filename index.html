@@ -1253,6 +1253,9 @@ let p1 = `LÚC ${data.hourText} | L = ${data.totalLengthKm.toFixed(1)} km | Q = 
 
         ctx.font = "bold 12.5px sans-serif";
         ctx.fillText(` = ${data.totalHf.toFixed(2)} m`, startX + w1 + wF_top, topY + 4);
+
+        // Vòng lặp vẽ các Nút mạng
+        nodes.forEach((n) => {
             let x = getX(n.dist);
             let yZ = getY(n.z);
             let yH = getY(n.H);
@@ -1283,7 +1286,7 @@ let p1 = `LÚC ${data.hourText} | L = ${data.totalLengthKm.toFixed(1)} km | Q = 
                 ctx.fillText(n.label, x, circleY + 20);
             }
 
-            // Đường nét đứt dóng xuống phía dưới (Đã bổ sung biến lineStartY chính xác)
+            // Đường nét đứt dóng xuống phía dưới
             let lineStartY = n.label ? circleY + 25 : circleY + 12;
             ctx.beginPath(); 
             ctx.moveTo(x, lineStartY); 
