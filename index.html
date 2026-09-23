@@ -1190,17 +1190,25 @@
         let totalTopW = w1 + wF_top + w2;
         let startX = (x0 + x4)/2 - totalTopW/2;
 
+    // Vẽ nền trắng bo góc cho nhóm thông số Q, v, Hf
         ctx.fillStyle = "#ffffff";
-        ctx.fillRect(startX - 6, topY - 8, totalTopW + 12, 16);
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect ? ctx.roundRect(startX - 6, topY - 10, totalTopW + 12, 20, 4) : ctx.rect(startX - 6, topY - 10, totalTopW + 12, 20);
+        ctx.fill();
+        ctx.stroke();
 
-        ctx.fillStyle = "#b91c1c"; ctx.textAlign = "left";
-        ctx.font = "bold 11.5px sans-serif";
+    // Vẽ chữ Q, v, Hf màu đậm rõ nét
+        ctx.fillStyle = "#0f172a"; 
+        ctx.textAlign = "left";
+        ctx.font = "bold 11px sans-serif";
         ctx.fillText(p1, startX, topY + 4);
-        
+
         ctx.font = "bold 9px sans-serif";
         ctx.fillText("f", startX + w1, topY + 7);
-        
-        ctx.font = "bold 11.5px sans-serif";
+
+        ctx.font = "bold 11px sans-serif";
         ctx.fillText(` = ${data.totalHf.toFixed(2)} m`, startX + w1 + wF_top, topY + 4);
 
         nodes.forEach((n) => {
@@ -1227,7 +1235,7 @@
                 ctx.fillText(n.label, x, circleY + 20);
             }
 
-            let lineStartY = n.label ? circleY + 25 : circleY + 12;
+            ctx.fillText(`Z = ${n.z}m`, x + 15, H - padB + 54);
             ctx.beginPath(); ctx.moveTo(x, lineStartY); ctx.lineTo(x, H - padB + 48);
             ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1; ctx.setLineDash([2, 2]); ctx.stroke(); ctx.setLineDash([]);
 
@@ -1235,23 +1243,24 @@
             
             if (n.id === "5") {
                 ctx.textAlign = "right";
-                ctx.fillText(`Z = ${n.z}m`, x + 15, H - padB + 58);
+                ctx.fillText(`Z = ${n.z}m`, x + 15, H - padB + 54);
                 if (n.qOutH > 0) {
                     ctx.fillStyle = "#b91c1c";
                     ctx.fillText(`Q_n-5 = ${n.qOutH.toFixed(1)} m³/h`, x + 15, H - padB + 70);
                 }
             } else {
                 ctx.textAlign = "center";
-                ctx.fillText(`Z = ${n.z}m`, x, H - padB + 58);
+                ctx.fillText(`Z = ${n.z}m`, x, H - padB + 54);
                 if (n.qOutH > 0) {
                     ctx.fillStyle = "#b91c1c";
                     ctx.fillText(`Q_n-${n.id} = ${n.qOutH.toFixed(1)} m³/h`, x, H - padB + 70);
                 }
             }
 
-            ctx.fillStyle = n.p < 0 ? "#dc2626" : "#0284c7"; ctx.font = "bold 11px sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText(`P=${n.p.toFixed(1)}m`, x, yH - 8);
+        ctx.fillStyle = n.p < 0 ? "#dc2626" : "#0284c7";
+        ctx.textAlign = "center";
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText(`P=${n.p.toFixed(1)}m`, x, yH - 16);
         });
 
         ctx.fillStyle = "#0284c7"; ctx.fillRect(padL + 10, 48, 14, 8);
