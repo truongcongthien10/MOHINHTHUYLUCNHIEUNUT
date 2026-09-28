@@ -72,10 +72,10 @@
         .warn-red { background: #fef2f2; border-left: 4px solid #dc2626; color: #991b1b; }
         .warn-green { background: #f0fdf4; border-left: 4px solid #16a34a; color: #166534; }
 
-        .diagram-wrapper { position: relative; width: 100%; background: #ffffff; border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; margin-top: 6px; }
-        canvas { width: 100%; height: 380px; background: #ffffff; display: block; }
+        .diagram-wrapper { position: relative; width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 6px; margin-top: 6px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.5); }
+        canvas { width: 100%; height: 410px; background: transparent; display: block; }
 
-        /* BỐ CỤC NHẬP LIỆU TÁCH THÀNH 2 DÃY (4 ĐOẠN - 5 NÚT) */
+        /* BỐ CỤC NHẬP LIỆU TÁCH THÀNH 2 DÃY */
         .inputs-container { margin-top: 10px; display: flex; flex-direction: column; gap: 12px; }
         
         .pipe-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -97,11 +97,9 @@
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
 
-    /* Ô nhập số liệu nổi bật */
         .input-card input { width: 70px; padding: 3px 6px; border: 1.5px solid #94a3b8; border-radius: 4px; font-size: 0.78rem; font-weight: 700; color: #0f172a; text-align: center; outline: none; background: #ffffff; height: 26px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s ease; }
         .input-card select { width: 100%; max-width: 150px; padding: 2px 4px; border: 1.5px solid #94a3b8; border-radius: 4px; font-size: 0.72rem; font-weight: 700; color: #0f172a; text-align: left; outline: none; background: #ffffff; height: 26px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s ease; }
 
-    /* Viền sáng nổi bật khi click chọn ô */
         .input-card input:focus, .input-card select:focus { border-color: #0284c7; box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.25); background-color: #f0f9ff; }
 
         .sub-info { font-size: 0.72rem; color: #166534; font-weight: 700; text-align: right; margin-top: 4px; }
@@ -169,7 +167,7 @@
                     </table>
                 </div>
                 <div class="pattern-chart-wrapper">
-                    <div class="pattern-chart-title">Đồ thị </div>
+                    <div class="pattern-chart-title">Đồ thị</div>
                     <canvas id="patternCanvas" class="pattern-chart-canvas"></canvas>
                 </div>
             </div>
@@ -200,8 +198,8 @@
 
         <div id="warn_box" class="warning-box"></div>
 
-        <!-- SƠ ĐỒ TRẮC DỌC TOÀN TUYẾN ỐNG -->
-        <div class="section-title">II. Sơ đồ trắc dọc toàn tuyến (Mô hình 5 nút)</div>
+        <!-- SƠ ĐỒ TRẮC DỌC TOÀN TUYẾN ỐNG (NÂNG CẤP 3D) -->
+        <div class="section-title">II. Sơ đồ trắc dọc 3D toàn tuyến (Mô hình 5 nút)</div>
         
         <div class="diagram-wrapper">
             <canvas id="profileCanvas"></canvas>
@@ -304,7 +302,6 @@
 
                 <!-- DÃY 2: CÁC NÚT MẠNG LƯỚI (NÚT 1 -> NÚT 5) -->
                 <div class="node-row">
-                    <!-- NÚT 1 -->
                     <div class="input-card node-card">
                         <div class="card-header">DỮ LIỆU NÚT 1 (NGUỒN)</div>
                         <div class="input-row"><label>Z<sub>1</sub> điểm đầu (m):</label><input type="number" id="z1" value="5.0" onchange="calculateProfile()"></div>
@@ -334,7 +331,6 @@
                         </div>
                     </div>
 
-                    <!-- NÚT 2 -->
                     <div class="input-card node-card">
                         <div class="card-header">DỮ LIỆU NÚT 2</div>
                         <div class="input-row"><label>Z<sub>2</sub> (m):</label><input type="number" id="z2" value="18.0" onchange="calculateProfile()"></div>
@@ -345,7 +341,6 @@
                         </div>
                     </div>
 
-                    <!-- NÚT 3 -->
                     <div class="input-card node-card">
                         <div class="card-header">DỮ LIỆU NÚT 3</div>
                         <div class="input-row"><label>Z<sub>3</sub> (m):</label><input type="number" id="z3" value="10.0" onchange="calculateProfile()"></div>
@@ -356,7 +351,6 @@
                         </div>
                     </div>
 
-                    <!-- NÚT 4 -->
                     <div class="input-card node-card">
                         <div class="card-header">DỮ LIỆU NÚT 4</div>
                         <div class="input-row"><label>Z<sub>4</sub> (m):</label><input type="number" id="z4" value="5.0" onchange="calculateProfile()"></div>
@@ -367,7 +361,6 @@
                         </div>
                     </div>
 
-                    <!-- NÚT 5 (ĐIỂM CUỐI) -->
                     <div class="input-card node-card-end">
                         <div class="card-header">DỮ LIỆU NÚT 5 (ĐIỂM CUỐI)</div>
                         <div class="input-row"><label>Z<sub>5</sub> điểm cuối (m):</label><input type="number" id="z5" value="3.0" onchange="calculateProfile()"></div>
@@ -384,12 +377,11 @@
 
     <div class="footer">
         <div>Copyright © <b>PHÒNG KỸ THUẬT - HueWACO</b></div>
-        <div style="color:#166534; font-weight:bold;">🟢 Tự động tính toán Real-time (Mô hình 5 Nút)</div>
+        <div style="color:#166534; font-weight:bold;">🟢 Tự động tính toán Real-time (Mô hình 5 Nút 3D)</div>
     </div>
 </div>
 
 <script>
-    // PATTERN MẶC ĐỊNH
     const DEFAULT_PATTERNS = [
         {
             id: "p_sinhhoat",
@@ -871,7 +863,6 @@
         return Q_m3s / ((Math.PI * Math.pow(D_m, 2)) / 4);
     }
 
-    // TÍNH TOÁN THỦY LỰC MÔ HÌNH 5 NÚT
     function calculateProfile() {
         ['12', '23', '34', '45'].forEach(s => {
             const dinVal = parseFloat(document.getElementById(`dn${s}`).value) || 0;
@@ -907,7 +898,6 @@
         const qOut4 = (qOut4Ngd / 24) * ct4;
         const qOut5 = (qOut5Ngd / 24) * ct5;
 
-        // CẤP ÁP LỰC TẠI NÚT 1
         const p1SourceType = document.getElementById('p1_source_type').value;
         const p1MangBq = parseFloat(document.getElementById('p1_mang_bq').value) || 0;
         const pIdx1Mang = parseInt(document.getElementById('pat_node1_mang').value) || 0;
@@ -1001,34 +991,27 @@
         const p4 = H4 - z4;
         const p5 = H5 - z5;
 
-    // Tính tổn thất tích lũy từ Nguồn (Nút 1) đến từng điểm tiêu thụ
         const hf_12 = hf12;
         const hf_13 = hf12 + hf23;
         const hf_14 = hf12 + hf23 + hf34;
         const hf_15 = hf12 + hf23 + hf34 + hf45;
 
-        // Cập nhật kết quả lên giao diện
         const totalLengthKm = (l12 + l23 + l34 + l45) / 1000;
         document.getElementById('res_total_length').innerText = totalLengthKm.toFixed(1) + " km";
         document.getElementById('res_total_q').innerText = q12.toFixed(1) + " m³/h";
 
         const resHfElem = document.getElementById('res_hf_total');
-
-        // Kiểm tra xem các nút trung gian (2, 3, 4) có dùng nước không
         const hasMidDemand = (qOut2 > 0 || qOut3 > 0 || qOut4 > 0);
 
         if (hasMidDemand) {
-            // Hiển thị chữ to, đậm, nét chuẩn báo cáo
             let hfDetailHTML = `<div style="font-size:0.9rem; color:#0f172a; line-height:1.5; font-weight:800;">`;
             if (qOut2 > 0) hfDetailHTML += `H<sub>f(1➔2)</sub>: <span style="color:#0284c7;">${hf_12.toFixed(2)}m</span> `;
             if (qOut3 > 0) hfDetailHTML += `H<sub>f(1➔3)</sub>: <span style="color:#0284c7;">${hf_13.toFixed(2)}m</span> `;
             if (qOut4 > 0) hfDetailHTML += `H<sub>f(1➔4)</sub>: <span style="color:#0284c7;">${hf_14.toFixed(2)}m</span> `;
             if (qOut5 > 0) hfDetailHTML += `<br><span style="color:#b91c1c; font-size:1rem;">H<sub>f(1➔5)</sub> (Đ.Cuối): ${hf_15.toFixed(2)}m</span>`;
             hfDetailHTML += `</div>`;
-            
             resHfElem.innerHTML = hfDetailHTML;
         } else {
-            // Khi chỉ có Nút 5 dùng nước
             resHfElem.innerHTML = `<span style="font-size:1.35rem; font-weight:800; color:#b91c1c;">${hf_15.toFixed(2)} m</span>`;
         }
 
@@ -1045,7 +1028,7 @@
             warnBox.style.display = "block";
         }
 
-        drawProfileCanvas({
+        drawProfileCanvas3D({
             nodes: [
                 { id: "1", label: "Điểm đầu", dist: 0, z: z1, H: H1, p: p1, qOutH: 0 },
                 { id: "2", label: "", dist: l12, z: z2, H: H2, p: p2, qOutH: qOut2 },
@@ -1068,16 +1051,17 @@
         });
     }
 
-    function drawProfileCanvas(data) {
+    // TÍNH NĂNG VẼ MÔ HÌNH TRẮC DỌC 2.5D / PSEUDO-3D HIỆN ĐẠI
+    function drawProfileCanvas3D(data) {
         const canvas = document.getElementById('profileCanvas');
         const ctx = canvas.getContext('2d');
 
         canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = 380;
+        canvas.height = 410;
 
         const W = canvas.width;
         const H = canvas.height;
-        const padL = 55, padR = 50, padT = 75, padB = 75;
+        const padL = 60, padR = 60, padT = 80, padB = 80;
 
         ctx.clearRect(0, 0, W, H);
 
@@ -1087,82 +1071,152 @@
         
         let allHeights = nodes.map(n => n.z).concat(nodes.map(n => n.H));
         let minVal = Math.min(...allHeights) - 5;
-        let maxVal = Math.max(...allHeights) + 10;
+        let maxVal = Math.max(...allHeights) + 12;
         if (minVal < 0) minVal = 0;
+
+        // Bề sâu nghiêng góc Isometric 3D
+        const depthX = 18;
+        const depthY = -12;
 
         function getX(dist) { return padL + (dist / maxDist) * (W - padL - padR); }
         function getY(val) { return H - padB - ((val - minVal) / (maxVal - minVal)) * (H - padT - padB); }
 
-        // Lưới ngang
-        ctx.strokeStyle = "#f1f5f9"; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+        // 1. LƯỚI TỌA ĐỘ VÀ VÙNG NỀN NỔI
+        ctx.strokeStyle = "#1e293b"; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
         for (let v = Math.floor(minVal); v <= maxVal; v += 10) {
             let y = getY(v);
-            ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
-            ctx.fillStyle = "#94a3b8"; ctx.font = "10px sans-serif";
+            ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR + depthX, y + depthY); ctx.stroke();
+            ctx.fillStyle = "#64748b"; ctx.font = "bold 10px sans-serif";
             ctx.fillText(v + "m", 20, y + 3);
         }
         ctx.setLineDash([]);
 
-        // Đường địa hình Z (Xanh nước biển)
+        // 2. VẼ DẢI ĐỊA HÌNH KHỐI 3D (3D GROUND BLOCK)
+        // Mặt hông địa hình (3D Depth Side Right)
+        let xLast = getX(nodes[4].dist);
+        let zLastY = getY(nodes[4].z);
+        let groundBottom = H - padB;
+
         ctx.beginPath();
-        ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].z));
-        for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].z));
-        ctx.lineTo(getX(nodes[4].dist), H - padB);
-        ctx.lineTo(getX(nodes[0].dist), H - padB);
+        ctx.moveTo(xLast, zLastY);
+        ctx.lineTo(xLast + depthX, zLastY + depthY);
+        ctx.lineTo(xLast + depthX, groundBottom + depthY);
+        ctx.lineTo(xLast, groundBottom);
         ctx.closePath();
-        ctx.fillStyle = "rgba(2, 132, 199, 0.12)"; ctx.fill();
+        let gradSide = ctx.createLinearGradient(xLast, zLastY, xLast + depthX, groundBottom + depthY);
+        gradSide.addColorStop(0, "#0f392b");
+        gradSide.addColorStop(1, "#051e16");
+        ctx.fillStyle = gradSide;
+        ctx.fill();
 
+        // Mặt trước Khối Đất (3D Front Ground)
         ctx.beginPath();
         ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].z));
         for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].z));
-        ctx.strokeStyle = "#0284c7"; ctx.lineWidth = 3; ctx.stroke();
+        ctx.lineTo(getX(nodes[4].dist), groundBottom);
+        ctx.lineTo(getX(nodes[0].dist), groundBottom);
+        ctx.closePath();
+        let gradGround = ctx.createLinearGradient(0, padT, 0, groundBottom);
+        gradGround.addColorStop(0, "rgba(16, 124, 65, 0.45)");
+        gradGround.addColorStop(1, "rgba(5, 46, 22, 0.85)");
+        ctx.fillStyle = gradGround;
+        ctx.fill();
 
-        // Đường áp lực H (Nét đứt)
+        // Mặt trên Khối Đất (3D Top Surface)
+        ctx.beginPath();
+        ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].z));
+        for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].z));
+        for (let i = nodes.length - 1; i >= 0; i--) ctx.lineTo(getX(nodes[i].dist) + depthX, getY(nodes[i].z) + depthY);
+        ctx.closePath();
+        let gradTop = ctx.createLinearGradient(0, 0, W, H);
+        gradTop.addColorStop(0, "#15803d");
+        gradTop.addColorStop(1, "#005a36");
+        ctx.fillStyle = gradTop;
+        ctx.fill();
+
+        // 3. VẼ TUYẾN ỐNG DẪN NƯỚC HÌNH TRỤ 3D (3D PIPELINE)
+        for (let i = 0; i < 4; i++) {
+            let xA = getX(nodes[i].dist), yA = getY(nodes[i].z);
+            let xB = getX(nodes[i+1].dist), yB = getY(nodes[i+1].z);
+
+            // Bóng đổ ống 3D xuống lòng đất
+            ctx.beginPath();
+            ctx.moveTo(xA, yA + 6); ctx.lineTo(xB, yB + 6);
+            ctx.strokeStyle = "rgba(0,0,0,0.5)"; ctx.lineWidth = 10; ctx.stroke();
+
+            // Thân ống chính tròn 3D
+            let gradPipe = ctx.createLinearGradient(xA, yA - 5, xA, yA + 5);
+            gradPipe.addColorStop(0, "#38bdf8");
+            gradPipe.addColorStop(0.5, "#0284c7");
+            gradPipe.addColorStop(1, "#0369a1");
+            
+            ctx.beginPath();
+            ctx.moveTo(xA, yA); ctx.lineTo(xB, yB);
+            ctx.strokeStyle = gradPipe; ctx.lineWidth = 7; ctx.lineCap = "round"; ctx.stroke();
+
+            // Dải phản quang 3D lấp lánh ở giữa ống
+            ctx.beginPath();
+            ctx.moveTo(xA, yA - 1); ctx.lineTo(xB, yB - 1);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.65)"; ctx.lineWidth = 2; ctx.stroke();
+        }
+
+        // 4. VẼ ĐƯỜNG MẶT CỘT ÁP H NỔI PHÁT SÁNG (3D LUMINOUS WATER LINE)
+        // Dải lụa không gian phía sau
         ctx.beginPath();
         ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].H));
         for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].H));
-        ctx.strokeStyle = "#0284c7"; ctx.lineWidth = 2.5; ctx.setLineDash([6, 4]); ctx.stroke();
-        ctx.setLineDash([]);
+        for (let i = nodes.length - 1; i >= 0; i--) ctx.lineTo(getX(nodes[i].dist) + depthX, getY(nodes[i].H) + depthY);
+        ctx.closePath();
+        let gradWaterRibbon = ctx.createLinearGradient(0, 0, W, H);
+        gradWaterRibbon.addColorStop(0, "rgba(56, 189, 248, 0.35)");
+        gradWaterRibbon.addColorStop(1, "rgba(2, 132, 199, 0.15)");
+        ctx.fillStyle = gradWaterRibbon;
+        ctx.fill();
 
-        // Icon Bơm
+        // Đường nét chính
+        ctx.beginPath();
+        ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].H));
+        for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].H));
+        ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 3.5; ctx.setLineDash([8, 4]);
+        ctx.shadowColor = "#0284c7"; ctx.shadowBlur = 8;
+        ctx.stroke();
+        ctx.shadowBlur = 0; ctx.setLineDash([]);
+
+        // 5. ICON BƠM TĂNG ÁP 3D
         if (data.isPumpStationMode) {
             let x1 = getX(nodes[0].dist);
             let z1Y = getY(nodes[0].z);
-            let pumpX = x1 + 22;
-            let pumpY = z1Y - 14;
+            let pumpX = x1 + 24;
+            let pumpY = z1Y - 16;
 
             ctx.save();
             ctx.beginPath();
-            ctx.arc(pumpX, pumpY, 11, 0, Math.PI * 2);
+            ctx.arc(pumpX, pumpY, 13, 0, Math.PI * 2);
             if (data.isPumpActive) {
-                ctx.fillStyle = `rgba(22, 163, 74, ${pulseOpacity})`;
-                ctx.strokeStyle = "#15803d";
+                ctx.fillStyle = `rgba(34, 197, 94, ${pulseOpacity})`;
+                ctx.strokeStyle = "#4ade80";
             } else {
-                ctx.fillStyle = "#dc2626";
-                ctx.strokeStyle = "#991b1b";
+                ctx.fillStyle = "#ef4444";
+                ctx.strokeStyle = "#f87171";
             }
-            ctx.lineWidth = 2;
-            ctx.fill();
-            ctx.stroke();
+            ctx.lineWidth = 2.5; ctx.fill(); ctx.stroke();
 
             ctx.beginPath();
-            ctx.moveTo(pumpX - 7, pumpY + 7);
-            ctx.lineTo(pumpX + 8, pumpY);
-            ctx.lineTo(pumpX - 7, pumpY - 7);
+            ctx.moveTo(pumpX - 8, pumpY + 8);
+            ctx.lineTo(pumpX + 9, pumpY);
+            ctx.lineTo(pumpX - 8, pumpY - 8);
             ctx.closePath();
-            ctx.fillStyle = "#ffffff";
-            ctx.fill();
+            ctx.fillStyle = "#ffffff"; ctx.fill();
             ctx.restore();
         }
 
+        // 6. CARD KẾT QUẢ ĐOẠN ỐNG LƠ LỬNG 3D (GLASSMORPHISM FLOATING BOXES)
         function drawHfSubscript(x, y, hfVal, color) {
             ctx.save();
-            ctx.fillStyle = color;
-            ctx.font = "bold 10px sans-serif";
+            ctx.fillStyle = color; ctx.font = "bold 10px sans-serif";
             let valStr = ` = ${hfVal.toFixed(2)} m`;
             let wH = ctx.measureText("H").width;
             let wVal = ctx.measureText(valStr).width;
-
             ctx.font = "bold 8px sans-serif";
             let wF = ctx.measureText("f").width;
 
@@ -1171,10 +1225,8 @@
 
             ctx.font = "bold 10px sans-serif";
             ctx.fillText("H", startX + wH / 2, y);
-
             ctx.font = "bold 8px sans-serif";
             ctx.fillText("f", startX + wH + wF / 2, y + 3);
-
             ctx.font = "bold 10px sans-serif";
             ctx.fillText(valStr, startX + wH + wF + wVal / 2, y);
             ctx.restore();
@@ -1185,42 +1237,48 @@
             let yHMid = (getY(nodes[i].H) + getY(nodes[i+1].H)) / 2;
             let segInfo = segs[i];
 
-        // Vẽ ô phông nền trắng nhỏ đằng sau chữ Q, v, Hf của từng đoạn
-            ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-            ctx.strokeStyle = "#cbd5e1";
-            ctx.lineWidth = 1;
+            // Bóng đổ 3D hộp kết quả
+            ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
             ctx.beginPath();
-        if (typeof ctx.roundRect === "function") {
-            ctx.roundRect(xMid - 45, yHMid + 6, 90, 48, 4);
-        } else {
-            ctx.rect(xMid - 45, yHMid + 6, 90, 48);
-        }
+            if (typeof ctx.roundRect === "function") {
+                ctx.roundRect(xMid - 43, yHMid + 10, 90, 48, 6);
+            } else {
+                ctx.rect(xMid - 43, yHMid + 10, 90, 48);
+            }
             ctx.fill();
-            ctx.stroke();
 
-        // In thông số Q, v, Hf
-            ctx.font = "bold 10px sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillStyle = "#005a9e"; ctx.fillText(`Q = ${segInfo.q.toFixed(1)} m³/h`, xMid, yHMid + 18);
-            ctx.fillStyle = "#15803d"; ctx.fillText(`v = ${segInfo.v.toFixed(2)} m/s`, xMid, yHMid + 32);
-    
-            drawHfSubscript(xMid, yHMid + 46, segInfo.hf, "#b91c1c");
+            // Khối hộp chính 3D
+            let gradBox = ctx.createLinearGradient(xMid - 45, yHMid + 8, xMid + 45, yHMid + 54);
+            gradBox.addColorStop(0, "#ffffff");
+            gradBox.addColorStop(1, "#f1f5f9");
+            
+            ctx.fillStyle = gradBox;
+            ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            if (typeof ctx.roundRect === "function") {
+                ctx.roundRect(xMid - 45, yHMid + 8, 90, 48, 6);
+            } else {
+                ctx.rect(xMid - 45, yHMid + 8, 90, 48);
+            }
+            ctx.fill(); ctx.stroke();
+
+            ctx.font = "bold 10px sans-serif"; ctx.textAlign = "center";
+            ctx.fillStyle = "#0284c7"; ctx.fillText(`Q = ${segInfo.q.toFixed(1)} m³/h`, xMid, yHMid + 22);
+            ctx.fillStyle = "#15803d"; ctx.fillText(`v = ${segInfo.v.toFixed(2)} m/s`, xMid, yHMid + 35);
+            drawHfSubscript(xMid, yHMid + 48, segInfo.hf, "#b91c1c");
         }
 
-        let topY = 22;
+        // 7. THANH THÔNG TIN BÁO CÁO TRÊN CÙNG
+        let topY = 24;
         let x0 = getX(0);
         let x4 = getX(nodes[4].dist);
 
-        ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1.8;
+        ctx.strokeStyle = "#475569"; ctx.lineWidth = 1.8;
         ctx.beginPath(); ctx.moveTo(x0, topY); ctx.lineTo(x4, topY); ctx.stroke();
-        
-        ctx.beginPath(); ctx.moveTo(x0 + 6, topY - 4); ctx.lineTo(x0, topY); ctx.lineTo(x0 + 6, topY + 4); ctx.fillStyle = "#94a3b8"; ctx.fill();
-        ctx.beginPath(); ctx.moveTo(x4 - 6, topY - 4); ctx.lineTo(x4, topY); ctx.lineTo(x4 - 6, topY + 4); ctx.fillStyle = "#94a3b8"; ctx.fill();
 
-let p1 = `LÚC ${data.hourText} | L = ${data.totalLengthKm.toFixed(1)} km | Q = ${data.totalQ.toFixed(1)} m³/h | H`;
-        
+        let p1Str = `LÚC ${data.hourText} | L = ${data.totalLengthKm.toFixed(1)} km | Q = ${data.totalQ.toFixed(1)} m³/h | H`;
         ctx.font = "bold 12.5px sans-serif";
-        let w1 = ctx.measureText(p1).width;
+        let w1 = ctx.measureText(p1Str).width;
         ctx.font = "bold 10px sans-serif";
         let wF_top = ctx.measureText("f").width;
         ctx.font = "bold 12.5px sans-serif";
@@ -1229,108 +1287,86 @@ let p1 = `LÚC ${data.hourText} | L = ${data.totalLengthKm.toFixed(1)} km | Q = 
         let totalTopW = w1 + wF_top + w2;
         let startX = (x0 + x4)/2 - totalTopW/2;
 
-        // Vẽ phông nền trắng bo góc viền xanh đậm nổi bật
-        ctx.fillStyle = "#ffffff";
-        ctx.strokeStyle = "#0284c7";
-        ctx.lineWidth = 1.5;
+        ctx.fillStyle = "#0f172a";
+        ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 1.8;
         ctx.beginPath();
         if (typeof ctx.roundRect === "function") {
-            ctx.roundRect(startX - 8, topY - 12, totalTopW + 16, 24, 4);
+            ctx.roundRect(startX - 10, topY - 14, totalTopW + 20, 26, 6);
         } else {
-            ctx.rect(startX - 8, topY - 12, totalTopW + 16, 24);
+            ctx.rect(startX - 10, topY - 14, totalTopW + 20, 26);
         }
-        ctx.fill();
-        ctx.stroke();
+        ctx.fill(); ctx.stroke();
 
-        // Chữ in đậm to nét (12.5px bold)
-        ctx.fillStyle = "#0f172a"; 
-        ctx.textAlign = "left";
-        ctx.font = "bold 12.5px sans-serif";
-        ctx.fillText(p1, startX, topY + 4);
+        ctx.fillStyle = "#ffffff"; ctx.textAlign = "left";
+        ctx.font = "bold 12.5px sans-serif"; ctx.fillText(p1Str, startX, topY + 4);
+        ctx.font = "bold 10px sans-serif"; ctx.fillText("f", startX + w1, topY + 7);
+        ctx.font = "bold 12.5px sans-serif"; ctx.fillText(` = ${data.totalHf.toFixed(2)} m`, startX + w1 + wF_top, topY + 4);
 
-        ctx.font = "bold 10px sans-serif";
-        ctx.fillText("f", startX + w1, topY + 7);
-
-        ctx.font = "bold 12.5px sans-serif";
-        ctx.fillText(` = ${data.totalHf.toFixed(2)} m`, startX + w1 + wF_top, topY + 4);
-
-        // Vòng lặp vẽ các Nút mạng
+        // 8. CÁC TRỤ NÚT MẠNG 3D (3D NODE PILLARS)
         nodes.forEach((n) => {
             let x = getX(n.dist);
             let yZ = getY(n.z);
             let yH = getY(n.H);
 
-            // Đường cột áp đứng (dóng từ Z đến H)
-            ctx.beginPath(); 
-            ctx.moveTo(x, yZ); 
-            ctx.lineTo(x, yH);
-            ctx.strokeStyle = n.p < 0 ? "#dc2626" : "#cbd5e1"; 
-            ctx.lineWidth = 1.5; 
-            ctx.stroke();
+            // Cột trụ Isometric nổi dóng từ Z tới H
+            ctx.beginPath(); ctx.moveTo(x, yZ); ctx.lineTo(x, yH);
+            ctx.strokeStyle = n.p < 0 ? "#ef4444" : "#38bdf8";
+            ctx.lineWidth = 2.5; ctx.stroke();
 
-            // Điểm mút
-            ctx.beginPath(); ctx.arc(x, yZ, 5, 0, Math.PI * 2); ctx.fillStyle = "#dc2626"; ctx.fill();
-            ctx.beginPath(); ctx.arc(x, yH, 4, 0, Math.PI * 2); ctx.fillStyle = "#0284c7"; ctx.fill();
+            // Điểm mút nổi 3D
+            ctx.beginPath(); ctx.arc(x, yZ, 6, 0, Math.PI * 2); ctx.fillStyle = "#ef4444"; ctx.fill();
+            ctx.beginPath(); ctx.arc(x, yH, 5, 0, Math.PI * 2); ctx.fillStyle = "#38bdf8"; ctx.fill();
 
-            // Vòng tròn số thứ tự Nút
-            let circleY = H - padB + 18;
-            ctx.beginPath(); ctx.arc(x, circleY, 9, 0, Math.PI * 2);
-            ctx.fillStyle = "#ffffff"; ctx.fill();
-            ctx.strokeStyle = "#005a36"; ctx.lineWidth = 1.5; ctx.stroke();
+            // Vòng tròn số thứ tự Nút dạng nút nổi 3D
+            let circleY = H - padB + 20;
+            ctx.beginPath(); ctx.arc(x, circleY, 11, 0, Math.PI * 2);
+            let gradNode = ctx.createLinearGradient(x-10, circleY-10, x+10, circleY+10);
+            gradNode.addColorStop(0, "#ffffff");
+            gradNode.addColorStop(1, "#cbd5e1");
+            ctx.fillStyle = gradNode; ctx.fill();
+            ctx.strokeStyle = "#005a36"; ctx.lineWidth = 2; ctx.stroke();
 
-            ctx.fillStyle = "#005a36"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center";
+            ctx.fillStyle = "#005a36"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
             ctx.fillText(n.id, x, circleY + 4);
 
             if (n.label) {
-                ctx.font = "10px sans-serif"; ctx.fillStyle = "#005a36";
-                ctx.fillText(n.label, x, circleY + 20);
+                ctx.font = "bold 10px sans-serif"; ctx.fillStyle = "#4ade80";
+                ctx.fillText(n.label, x, circleY + 22);
             }
 
-            // Đường nét đứt dóng xuống phía dưới
-            let lineStartY = n.label ? circleY + 25 : circleY + 12;
-            ctx.beginPath(); 
-            ctx.moveTo(x, lineStartY); 
-            ctx.lineTo(x, H - padB + 48);
-            ctx.strokeStyle = "#94a3b8"; 
-            ctx.lineWidth = 1; 
-            ctx.setLineDash([2, 2]); 
-            ctx.stroke(); 
-            ctx.setLineDash([]);
-
-            // Hiển thị Cao độ Z và Lưu lượng rút Q
-            ctx.font = "10px sans-serif"; 
-            ctx.fillStyle = "#475569";
-            
+            // Chữ ghi Cao độ Z và Lưu lượng rút Q
+            ctx.font = "10px sans-serif"; ctx.fillStyle = "#94a3b8";
             if (n.id === "5") {
                 ctx.textAlign = "right";
                 ctx.fillText(`Z = ${n.z}m`, x + 15, H - padB + 54);
                 if (n.qOutH > 0) {
-                    ctx.fillStyle = "#b91c1c";
+                    ctx.fillStyle = "#f87171";
                     ctx.fillText(`Q_n-5 = ${n.qOutH.toFixed(1)} m³/h`, x + 15, H - padB + 70);
                 }
             } else {
                 ctx.textAlign = "center";
                 ctx.fillText(`Z = ${n.z}m`, x, H - padB + 54);
                 if (n.qOutH > 0) {
-                    ctx.fillStyle = "#b91c1c";
+                    ctx.fillStyle = "#f87171";
                     ctx.fillText(`Q_n-${n.id} = ${n.qOutH.toFixed(1)} m³/h`, x, H - padB + 70);
                 }
             }
 
-            // Hiển thị Áp lực P (đẩy lên cao phía trên đường H)
-            ctx.fillStyle = n.p < 0 ? "#dc2626" : "#0284c7";
+            // Giá trị Áp lực dư P lơ lửng trên đỉnh Nút
+            ctx.fillStyle = n.p < 0 ? "#f87171" : "#38bdf8";
             ctx.textAlign = "center";
-            ctx.font = "bold 12px sans-serif";
+            ctx.font = "bold 13px sans-serif";
             ctx.fillText(`P=${n.p.toFixed(1)}m`, x, yH - 16);
         });
 
-        ctx.fillStyle = "#0284c7"; ctx.fillRect(padL + 10, 48, 14, 8);
-        ctx.fillStyle = "#334155"; ctx.font = "11px sans-serif"; ctx.textAlign = "left";
-        ctx.fillText("Cao độ Z (m)", padL + 30, 55);
+        // 9. CHÚ GIẢI MÔ HÌNH 3D
+        ctx.fillStyle = "#15803d"; ctx.fillRect(padL + 10, 48, 14, 8);
+        ctx.fillStyle = "#cbd5e1"; ctx.font = "11px sans-serif"; ctx.textAlign = "left";
+        ctx.fillText("Địa hình Khối 3D Z (m)", padL + 30, 55);
 
-        ctx.strokeStyle = "#0284c7"; ctx.lineWidth = 2; ctx.setLineDash([4, 3]);
-        ctx.beginPath(); ctx.moveTo(padL + 130, 52); ctx.lineTo(padL + 150, 52); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = "#334155"; ctx.fillText("Đường áp lực H (m)", padL + 158, 55);
+        ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2.5; ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(padL + 170, 52); ctx.lineTo(padL + 190, 52); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = "#cbd5e1"; ctx.fillText("Đường áp lực H 3D (m)", padL + 198, 55);
     }
 
     setInterval(() => {
