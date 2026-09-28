@@ -76,13 +76,12 @@
         .diagram-wrapper { position: relative; width: 100%; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px; margin-top: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
         canvas { width: 100%; height: 410px; background: #ffffff; display: block; }
 
-        /* BỐ CỤC KHỐI THIẾT KẾ 3D CHO CÁC Ô NHẬP LIỆU (HÌNH 2) */
+        /* BỐ CỤC KHỐI THIẾT KẾ 3D CHO CÁC Ô NHẬP LIỆU */
         .inputs-container { margin-top: 14px; display: flex; flex-direction: column; gap: 14px; }
         
         .pipe-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
         .node-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
 
-        /* Khối Card có hiệu ứng 3D đổ bóng đa tầng */
         .input-card { 
             background: #ffffff; 
             border: 1px solid #cbd5e1; 
@@ -100,7 +99,6 @@
         .node-card { border-top: 4px solid #0284c7; }
         .node-card-end { border-top: 4px solid #15803d; background: #f0fdf4; }
 
-        /* Tiêu đề đoạn/nút nổi bật với Nền Gradient */
         .card-header { 
             font-size: 0.85rem; 
             font-weight: 800; 
@@ -228,7 +226,7 @@
 
         <div id="warn_box" class="warning-box"></div>
 
-        <!-- SƠ ĐỒ TRẮC DỌC 3D NỀN TRẮNG -->
+        <!-- SƠ ĐỒ TRẮC DỌC 3D CẢI TIẾN TRỰC QUAN -->
         <div class="section-title">II. Sơ đồ trắc dọc 3D toàn tuyến (Mô hình 5 nút)</div>
         
         <div class="diagram-wrapper">
@@ -1081,7 +1079,7 @@
         });
     }
 
-    // THUẬT TOÁN MÔ HÌNH TRẮC DỌC 3D NỀN TRẮNG SÁNG RÕ RÀNG
+    // THUẬT TOÁN MÔ HÌNH TRẮC DỌC 3D (ĐÃ BỎ DẢI MỜ BÊN DƯỚI NÉT ĐỨT & NỀN ĐỊA HÌNH MÀU XÁM NHẠT)
     function drawProfileCanvasWhite3D(data) {
         const canvas = document.getElementById('profileCanvas');
         const ctx = canvas.getContext('2d');
@@ -1111,7 +1109,7 @@
         function getX(dist) { return padL + (dist / maxDist) * (W - padL - padR); }
         function getY(val) { return H - padB - ((val - minVal) / (maxVal - minVal)) * (H - padT - padB); }
 
-        // 1. VẼ LƯỚI TỌA ĐỘ VÀ CÁC ĐƯỜNG MỐC TRÊN NỀN TRẮNG
+        // 1. VẼ LƯỚI TỌA ĐỘ NỀN TRẮNG
         ctx.strokeStyle = "#e2e8f0"; ctx.lineWidth = 1.2; ctx.setLineDash([4, 4]);
         for (let v = Math.floor(minVal); v <= maxVal; v += 10) {
             let y = getY(v);
@@ -1121,12 +1119,12 @@
         }
         ctx.setLineDash([]);
 
-        // 2. VẼ DẢI KHỐI ĐỊA HÌNH 3D NỔI (3D GROUND BLOCK)
+        // 2. VẼ DẢI KHỐI ĐỊA HÌNH 3D NỀN MÀU XÁM NHẠT DỊU MẮT
         let xLast = getX(nodes[4].dist);
         let zLastY = getY(nodes[4].z);
         let groundBottom = H - padB;
 
-        // Mặt bên hông 3D
+        // Mặt bên hông 3D (Xám đậm)
         ctx.beginPath();
         ctx.moveTo(xLast, zLastY);
         ctx.lineTo(xLast + depthX, zLastY + depthY);
@@ -1134,12 +1132,12 @@
         ctx.lineTo(xLast, groundBottom);
         ctx.closePath();
         let gradSide = ctx.createLinearGradient(xLast, zLastY, xLast + depthX, groundBottom + depthY);
-        gradSide.addColorStop(0, "#15803d");
-        gradSide.addColorStop(1, "#166534");
+        gradSide.addColorStop(0, "#94a3b8");
+        gradSide.addColorStop(1, "#64748b");
         ctx.fillStyle = gradSide;
         ctx.fill();
 
-        // Mặt trước Khối Địa hình (Xanh lá mạ tươi mộc mạc)
+        // Mặt trước Khối Địa hình (Xám nhạt mộc mạc)
         ctx.beginPath();
         ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].z));
         for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].z));
@@ -1147,24 +1145,24 @@
         ctx.lineTo(getX(nodes[0].dist), groundBottom);
         ctx.closePath();
         let gradGround = ctx.createLinearGradient(0, padT, 0, groundBottom);
-        gradGround.addColorStop(0, "rgba(74, 222, 128, 0.5)");
-        gradGround.addColorStop(1, "rgba(22, 163, 74, 0.85)");
+        gradGround.addColorStop(0, "#e2e8f0");
+        gradGround.addColorStop(1, "#cbd5e1");
         ctx.fillStyle = gradGround;
         ctx.fill();
 
-        // Mặt đỉnh Khối Địa hình (Top 3D Ribbon)
+        // Mặt đỉnh Khối Địa hình (Xám trung tính 3D Ribbon)
         ctx.beginPath();
         ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].z));
         for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].z));
         for (let i = nodes.length - 1; i >= 0; i--) ctx.lineTo(getX(nodes[i].dist) + depthX, getY(nodes[i].z) + depthY);
         ctx.closePath();
         let gradTop = ctx.createLinearGradient(0, 0, W, H);
-        gradTop.addColorStop(0, "#4ade80");
-        gradTop.addColorStop(1, "#22c55e");
+        gradTop.addColorStop(0, "#cbd5e1");
+        gradTop.addColorStop(1, "#94a3b8");
         ctx.fillStyle = gradTop;
         ctx.fill();
 
-        // 3. VẼ DẢI ỐNG NƯỚC NỔI 3D CÓ PHẢN QUANG ÁNH KIM (3D CYLINDRICAL PIPELINE)
+        // 3. VẼ DẢI ỐNG NƯỚC NỔI 3D CÓ PHẢN QUANG ÁNH KIM
         for (let i = 0; i < 4; i++) {
             let xA = getX(nodes[i].dist), yA = getY(nodes[i].z);
             let xB = getX(nodes[i+1].dist), yB = getY(nodes[i+1].z);
@@ -1172,7 +1170,7 @@
             // Bóng đổ ống 3D
             ctx.beginPath();
             ctx.moveTo(xA, yA + 7); ctx.lineTo(xB, yB + 7);
-            ctx.strokeStyle = "rgba(0,0,0,0.18)"; ctx.lineWidth = 12; ctx.stroke();
+            ctx.strokeStyle = "rgba(0,0,0,0.15)"; ctx.lineWidth = 12; ctx.stroke();
 
             // Thân ống chính 3D
             let gradPipe = ctx.createLinearGradient(xA, yA - 6, xA, yA + 6);
@@ -1190,18 +1188,7 @@
             ctx.strokeStyle = "rgba(255, 255, 255, 0.85)"; ctx.lineWidth = 2.5; ctx.stroke();
         }
 
-        // 4. VẼ ĐƯỜNG MẶT CỘT ÁP H 3D (3D HYDRAULIC GRADE LINE)
-        ctx.beginPath();
-        ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].H));
-        for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].H));
-        for (let i = nodes.length - 1; i >= 0; i--) ctx.lineTo(getX(nodes[i].dist) + depthX, getY(nodes[i].H) + depthY);
-        ctx.closePath();
-        let gradWaterRibbon = ctx.createLinearGradient(0, 0, W, H);
-        gradWaterRibbon.addColorStop(0, "rgba(2, 132, 199, 0.2)");
-        gradWaterRibbon.addColorStop(1, "rgba(3, 105, 161, 0.05)");
-        ctx.fillStyle = gradWaterRibbon;
-        ctx.fill();
-
+        // 4. VẼ ĐƯỜNG MẶT CỘT ÁP H SẮC NÉT (ĐÃ BỎ DẢI BÓNG MỜ BÊN DƯỚI ĐÚNG YÊU CẦU)
         ctx.beginPath();
         ctx.moveTo(getX(nodes[0].dist), getY(nodes[0].H));
         for (let i = 1; i < nodes.length; i++) ctx.lineTo(getX(nodes[i].dist), getY(nodes[i].H));
@@ -1284,7 +1271,7 @@
             }
             ctx.fill(); ctx.stroke();
 
-            // Kết quả chữ nổi đậm nét giữ nguyên màu chuẩn
+            // Kết quả chữ nổi đậm nét
             ctx.font = "bold 10.5px sans-serif"; ctx.textAlign = "center";
             ctx.fillStyle = "#0284c7"; ctx.fillText(`Q = ${segInfo.q.toFixed(1)} m³/h`, xMid, yHMid + 25);
             ctx.fillStyle = "#16a34a"; ctx.fillText(`v = ${segInfo.v.toFixed(2)} m/s`, xMid, yHMid + 38);
@@ -1325,7 +1312,7 @@
         ctx.font = "bold 10.5px sans-serif"; ctx.fillText("f", startX + w1, topY + 8);
         ctx.font = "bold 13px sans-serif"; ctx.fillText(` = ${data.totalHf.toFixed(2)} m`, startX + w1 + wF_top, topY + 5);
 
-        // 8. CÁC ĐIỂM NÚT VÀ PHÂN MÀU ÁP LỰC P THEO ĐÚNG YÊU CẦU DẢI ĐO
+        // 8. CÁC ĐIỂM NÚT VÀ PHÂN MÀU ÁP LỰC P THEO YÊU CẦU DẢI ĐO
         nodes.forEach((n) => {
             let x = getX(n.dist);
             let yZ = getY(n.z);
@@ -1374,17 +1361,17 @@
                 }
             }
 
-            // --- QUY TẮC PHÂN MÀU ÁP LỰC P TRÊN ĐẦU MỖI NÚT ---
+            // --- PHÂN MÀU ÁP LỰC P TRÊN ĐẦU MỖI NÚT ---
             // 1. < 10m: Màu Đỏ (#dc2626)
             // 2. 10m - 25m: Màu Xanh lá mạ (#65a30d)
             // 3. > 25m: Màu Xanh da trời (#0284c7)
-            let pColor = "#0284c7"; // Mặc định > 25m
+            let pColor = "#0284c7";
             if (n.p < 10) {
-                pColor = "#dc2626"; // Đỏ
+                pColor = "#dc2626";
             } else if (n.p >= 10 && n.p <= 25) {
-                pColor = "#65a30d"; // Xanh lá mạ
+                pColor = "#65a30d";
             } else {
-                pColor = "#0284c7"; // Xanh da trời
+                pColor = "#0284c7";
             }
 
             // Hiển thị Áp lực P nổi đậm nét
@@ -1395,18 +1382,18 @@
         });
 
         // 9. CHÚ GIẢI THÔNG SỐ VÀ DẢI MÀU ÁP LỰC P
-        ctx.fillStyle = "#22c55e"; ctx.fillRect(padL + 10, 48, 14, 8);
+        ctx.fillStyle = "#94a3b8"; ctx.fillRect(padL + 10, 48, 14, 8);
         ctx.fillStyle = "#334155"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "left";
-        ctx.fillText("Địa hình 3D Z (m)", padL + 30, 55);
+        ctx.fillText("Địa hình 3D Z (Xám)", padL + 30, 55);
 
         ctx.strokeStyle = "#0284c7"; ctx.lineWidth = 2.5; ctx.setLineDash([4, 3]);
-        ctx.beginPath(); ctx.moveTo(padL + 145, 52); ctx.lineTo(padL + 165, 52); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = "#334155"; ctx.fillText("Áp lực H 3D (m)", padL + 173, 55);
+        ctx.beginPath(); ctx.moveTo(padL + 155, 52); ctx.lineTo(padL + 175, 52); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = "#334155"; ctx.fillText("Áp lực H 3D (m)", padL + 183, 55);
 
         // Chú giải dải màu Áp lực P
-        ctx.fillStyle = "#dc2626"; ctx.fillText("● P < 10m (Đỏ)", padL + 280, 55);
-        ctx.fillStyle = "#65a30d"; ctx.fillText("● P: 10 - 25m (Lá mạ)", padL + 375, 55);
-        ctx.fillStyle = "#0284c7"; ctx.fillText("● P > 25m (Xanh da trời)", padL + 505, 55);
+        ctx.fillStyle = "#dc2626"; ctx.fillText("● P < 10m (Đỏ)", padL + 290, 55);
+        ctx.fillStyle = "#65a30d"; ctx.fillText("● P: 10 - 25m (Lá mạ)", padL + 385, 55);
+        ctx.fillStyle = "#0284c7"; ctx.fillText("● P > 25m (Xanh da trời)", padL + 515, 55);
     }
 
     setInterval(() => {
